@@ -1,0 +1,15 @@
+Kimono Pagination
+https://help.kimonolabs.com/hc/en-us/articles/203274990-Crawl-pages-via-following-a-next-page-or-more-link
+
+Using Webhooks with Spark
+https://www.fullcontact.com/developer/docs/webhooks/
+https://github.com/fullcontact/fullcontact4j/blob/master/example/src/main/java/com/fullcontact/example/webhook/spark/SparkWebhookReceiver.java
+
+Parsing JSON with Spark
+https://sparktutorials.github.io/2015/04/03/spark-lombok-jackson-reduce-boilerplate.html
+
+Parsing JSON into multiple POJOs
+http://javareferencegv.blogspot.co.at/2015/04/parse-json-into-multiple-java-pojos.html
+
+Install Lombok for Eclipse (for IntelliJ Idea: use plugin)
+stackoverflow.com/questions/22310414/how-to-configure-lombok-in-eclipse-lunadd
