@@ -1,8 +1,10 @@
 angular.module('Raytracer', [])
   .controller('searchCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.containerIsTop = false;
+    $scope.loading = false;
 
     $scope.search = function() {
+      $scope.loading = true;
       if(!$scope.containerIsTop){
         $scope.containerIsTop = true;
       }
@@ -19,10 +21,12 @@ angular.module('Raytracer', [])
       };
       $http(req)
         .success(function(response) {
-          //TODO set result items here
+          $scope.results = response;
+          //$scope.loading = false;
         })
         .error(function() {
           //TODO show error message
+          //$scope.loading = false;
         });
     };
   }]);

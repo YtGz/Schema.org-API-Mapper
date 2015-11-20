@@ -29,10 +29,22 @@
 }
 
 .container-movetop {
-    top: 5%;
-    transform: translate(-50%, 0%);
-    -webkit-animation: movetop 0.7s; /* Chrome, Safari, Opera */
-    animation: movetop 0.7s;
+  top: 5%;
+  transform: translate(-50%, 0%);
+  -webkit-animation: movetop 0.7s; /* Chrome, Safari, Opera */
+  animation: movetop 0.7s;
+}
+
+.container-result {
+  padding-top: 20px;
+  display: none;
+}
+
+.container-result-view {
+  opacity: 1;
+  display: block;
+  -webkit-animation: view 1s;
+  animation: view 1s;
 }
 
 /* Chrome, Safari, Opera */
@@ -57,4 +69,63 @@
 @keyframes adjust {
   0%   {margin-top: 50px;}
   100% {margin-top: 5px;}
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes view {
+  0%   {display:none; opacity: 0;}
+  70%  {display:block; opacity: 0;}
+  100% {display:block; opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes view {
+  0%   {display:none; opacity: 0;}
+  70%  {display:block; opacity: 0;}
+  100% {display:block; opacity: 1;}
+}
+
+/*
+LOADING ANIMATION
+*/
+.spinner {
+  width: 40px;
+  height: 40px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
 }
