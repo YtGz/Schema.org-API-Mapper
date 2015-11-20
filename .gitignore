@@ -1,6 +1,8 @@
+/target
 *.class
 
 # Mobile Tools for Java (J2ME)
+
 .mtj.tmp/
 
 # Package Files #
@@ -27,6 +29,10 @@ local.properties
 
 # Eclipse Core
 .project
+
+# IntelliJ
+/.idea
+/scraper.iml
 
 # External tool builders
 .externalToolBuilders/

@@ -1,0 +1,60 @@
+.container {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.container-image {
+  background-image: url("../images/banner.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  width: 800px;
+  height: 162px;
+  top: 0px;
+  margin: auto;
+}
+
+.container-search {
+  margin-top: 50px;
+  bottom: 0px;
+}
+
+.container-search-adjust {
+  margin-top: 5px;
+  -webkit-animation: adjust 0.7s; /* Chrome, Safari, Opera */
+  animation: adjust 0.7s;
+}
+
+.container-movetop {
+    top: 5%;
+    transform: translate(-50%, 0%);
+    -webkit-animation: movetop 0.7s; /* Chrome, Safari, Opera */
+    animation: movetop 0.7s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes movetop {
+  0%   {top: 50%; transform: translate(-50%, -50%);}
+  100% {top: 5%; transform: translate(-50%, 0%);}
+}
+
+/* Standard syntax */
+@keyframes movetop {
+  0%   {top: 50%; transform: translate(-50%, -50%);}
+  100% {top: 5%; transform: translate(-50%, 0%);}
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes adjust {
+  0%   {margin-top: 50px;}
+  100% {margin-top: 5px;}
+}
+
+/* Standard syntax */
+@keyframes adjust {
+  0%   {margin-top: 50px;}
+  100% {margin-top: 5px;}
+}

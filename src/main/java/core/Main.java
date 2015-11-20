@@ -17,6 +17,9 @@ public class Main {
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
+		//Tell spark where our static files are
+		staticFileLocation("/public");
+
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
         
         /* Example for the 5gig API */

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Raytracer">
+<head>
+  <meta charset="utf-8">
+  <title>Raytracer</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/raytracer.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+  <script src="js/raytracer.js"></script>
+
+</head>
+<body ng-controller="searchCtrl">
+  <div ng-class="{'container': true, 'container-movetop': containerIsTop}">
+    <div class="u-max-full-width container-image"></div>
+    <div ng-class="{'container-search': true, 'container-search-adjust': containerIsTop}">
+      <div class="row">
+        <div class="six columns">
+          <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-model="searchText">
+        </div>
+        <div class="three columns">
+          <select class="u-full-width" id="typeInput" ng-model="searchType">
+            <option value="1">Events</option>
+            <option value="2">Restaurants</option>
+          </select>
+        </div>
+        <div class="three columns">
+          <button class="u-full-width button-primary" ng-click="search()">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-show="false">
+    <div ng-repeat="result in results">
+      <h4>{{result.name}}</h4>
+    </div>
+  </div>
+</body>
+</html>
