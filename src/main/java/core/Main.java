@@ -21,7 +21,13 @@ public class Main {
 		staticFileLocation("/public");
 
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
-        
+
+		post("/search", "application/json",(req, res) -> {
+			return "[{\"name\":\"Jabba\"},{\"name\":\"Wabba\"}]";
+		});
+
+
+
         /* Example for the 5gig API */
         get("/5gigtest", (req, res) -> {
         	try {
