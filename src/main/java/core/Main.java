@@ -6,12 +6,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.ObjectBuffer;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.io.IOUtils;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.JsonArray;
 
 public class Main {
 
@@ -22,11 +26,25 @@ public class Main {
 
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
 
+		/* POST - /search
+		 * returns all events/restaurants (depending on post param) as json
+		*/
 		post("/search", "application/json",(req, res) -> {
-			return "[{\"name\":\"Jabba\"},{\"name\":\"Wabba\"}]";
+
+			//create json object from url
+			URL endpoint = new URL("http://www.5gig.at/api/request.php?api_key=90c164a1d82540d7be50d54f4e887cb2&method=city.getEvents&city=Innsbruck&format=json");
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+			
+			//check if 5gig api call was successful
+			if (!json.get("status").asString().equals("success")) {
+				return "error with 5gig call";
+			}
+
+			//parse 5gig response
+			JsonArray events = json.get("response").asObject().get("gigs").asArray();
+			return events == null ? "error with 5gig call" : events;
 		});
-
-
 
         /* Example for the 5gig API */
         get("/5gigtest", (req, res) -> {
