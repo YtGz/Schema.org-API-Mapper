@@ -20,13 +20,14 @@ angular.module('Raytracer', [])
         }
       };
       $http(req)
-        .success(function(response) {
-          $scope.results = response;
-          //$scope.loading = false;
+        .success(function(res) {
+          $scope.error = null;
+          $scope.results = res;
+          $scope.loading = false;
         })
-        .error(function() {
-          //TODO show error message
-          //$scope.loading = false;
+        .error(function(res) {
+          $scope.error = 'Error: Could not get server results.';
+          $scope.loading = false;
         });
     };
   }]);

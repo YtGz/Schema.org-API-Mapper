@@ -7,6 +7,16 @@
   transform: translate(-50%, -50%);
 }
 
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #D8000C;
+    padding: 5px;
+}
+
 .container-image {
   background-image: url("../images/banner.png");
   background-repeat: no-repeat;
