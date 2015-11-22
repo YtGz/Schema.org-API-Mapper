@@ -20,6 +20,8 @@ import com.eclipsesource.json.JsonArray;
 
 import core.Event;
 import core.EventFactory;
+import core.Restaurant;
+import core.RestaurantFactory;
 import core.Endpoints;
 
 public class Main {
