@@ -1,7 +1,6 @@
 package core;
 
 import java.net.URL;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,8 +15,8 @@ public class Event {
 
 	private String name;
 	private String artist; //for now only 1 artist is stored, because jackson is ugly with arraylists
-	private Date startTime;
-	private Date endTime;
+	private String startTime; //date gets too ugly with jackson, so we use string
+	private String endTime;
 	private String description;
 	private URL image;
 	private String venue; //the name of the venue
