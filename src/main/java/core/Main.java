@@ -5,6 +5,7 @@ import static spark.Spark.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,9 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.JsonArray;
+
+import core.Event;
+import core.EventFactory;
 
 public class Main {
 
@@ -31,6 +35,9 @@ public class Main {
 		*/
 		post("/search", "application/json",(req, res) -> {
 
+			EventFactory event_factory = new EventFactory();
+			ArrayList<Event> events = new ArrayList<>();
+
 			//create json object from url
 			URL endpoint = new URL("http://www.5gig.at/api/request.php?api_key=90c164a1d82540d7be50d54f4e887cb2&method=city.getEvents&city=Innsbruck&format=json");
 			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
@@ -42,8 +49,21 @@ public class Main {
 			}
 
 			//parse 5gig response
-			JsonArray events = json.get("response").asObject().get("gigs").asArray();
-			return events == null ? "error with 5gig call" : events;
+			JsonArray json_events = json.get("response").asObject().get("gigs").asArray();
+			
+			for (JsonValue value : json_events) {
+				events.add(event_factory.createGigEvent(value.asObject()));
+			}
+
+			//return all events as a json array
+			StringJoiner sj = new StringJoiner(",", "[", "]");
+			ObjectMapper mapper = new ObjectMapper();
+
+			for (Event e : events) {
+				sj.add(mapper.writeValueAsString(e));
+			}
+
+			return events.isEmpty() ? "nope" : sj.toString();
 		});
 
         /* Example for the 5gig API */
