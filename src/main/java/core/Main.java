@@ -20,6 +20,7 @@ import com.eclipsesource.json.JsonArray;
 
 import core.Event;
 import core.EventFactory;
+import core.Endpoints;
 
 public class Main {
 
@@ -39,7 +40,7 @@ public class Main {
 			ArrayList<Event> events = new ArrayList<>();
 
 			//create json object from url
-			URL endpoint = new URL("http://www.5gig.at/api/request.php?api_key=90c164a1d82540d7be50d54f4e887cb2&method=city.getEvents&city=Innsbruck&format=json");
+			URL endpoint = new URL(Endpoints.fivegig);
 			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
 			JsonObject json = Json.parse(endpoint_content).asObject();
 			
