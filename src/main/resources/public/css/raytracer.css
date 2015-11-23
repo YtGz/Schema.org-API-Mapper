@@ -1,10 +1,8 @@
-.container {
+.wrapper {
+	width: 100%;
+  height: 100%;
   margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
+  padding: 0;
 }
 
 .error {
@@ -15,6 +13,11 @@
     border-width: 1px;
     border-color: #D8000C;
     padding: 5px;
+}
+
+.result {
+  border-top: 1px solid #AAAAAA;
+  padding-top: 20px;
 }
 
 .container-image {
@@ -34,39 +37,51 @@
 
 .container-search-adjust {
   margin-top: 5px;
-  -webkit-animation: adjust 0.7s; /* Chrome, Safari, Opera */
+  -webkit-animation: adjust 0.7s;
   animation: adjust 0.7s;
 }
 
+.container {
+  position:absolute;
+  left:0; right:0;
+  top:0; bottom:0;
+	margin:auto;
+  width: 800px;
+  height: 400px;
+
+  max-width:100%;
+	max-height:100%;
+}
+
 .container-movetop {
-  top: 5%;
-  transform: translate(-50%, 0%);
-  -webkit-animation: movetop 0.7s; /* Chrome, Safari, Opera */
+  padding-top: 10px;
+  height: 100%;
+  -webkit-animation: movetop 0.7s;
   animation: movetop 0.7s;
 }
 
 .container-result {
   padding-top: 20px;
-  display: none;
+  display: block;
+  opacity: 0;
 }
 
 .container-result-view {
   opacity: 1;
-  display: block;
   -webkit-animation: view 1s;
-  animation: view 1s;
+  animation: view 1s;*
 }
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes movetop {
-  0%   {top: 50%; transform: translate(-50%, -50%);}
-  100% {top: 5%; transform: translate(-50%, 0%);}
+  0%   {height: 400px;}
+  100% {height: 100%;}
 }
 
 /* Standard syntax */
 @keyframes movetop {
-  0%   {top: 50%; transform: translate(-50%, -50%);}
-  100% {top: 5%; transform: translate(-50%, 0%);}
+  0%   {height: 400px;}
+  100% {height: 100%;}
 }
 
 /* Chrome, Safari, Opera */
@@ -83,15 +98,15 @@
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes view {
-  0%   {display:none; opacity: 0;}
-  70%  {display:block; opacity: 0;}
+  0%   {display:block; opacity: 0;}
+  90%  {display:block; opacity: 0;}
   100% {display:block; opacity: 1;}
 }
 
 /* Standard syntax */
 @keyframes view {
-  0%   {display:none; opacity: 0;}
-  70%  {display:block; opacity: 0;}
+  0%   {display:block; opacity: 0;}
+  90%  {display:block; opacity: 0;}
   100% {display:block; opacity: 1;}
 }
 

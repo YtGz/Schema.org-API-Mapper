@@ -17,36 +17,42 @@
 
 </head>
 <body ng-controller="searchCtrl">
-  <div ng-class="{'container': true, 'container-movetop': containerIsTop}">
-    <div class="u-max-full-width container-image"></div>
-    <div ng-class="{'container-search': true, 'container-search-adjust': containerIsTop}">
-      <div class="row">
-        <div class="six columns">
-          <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-model="searchText">
-        </div>
-        <div class="three columns">
-          <select class="u-full-width" id="typeInput" ng-model="searchType">
-            <option value="1">Events</option>
-            <option value="2">Restaurants</option>
-          </select>
-        </div>
-        <div class="three columns">
-          <button class="u-full-width button-primary" ng-click="search()">Search</button>
+  <div class="wrapper">
+    <div ng-class="{'container': true, 'container-movetop': containerIsTop}">
+      <div class="u-max-full-width container-image"></div>
+      <div ng-class="{'container-search': true, 'container-search-adjust': containerIsTop}">
+        <div class="row">
+          <div class="six columns">
+            <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-model="searchText">
+          </div>
+          <div class="three columns">
+            <select class="u-full-width" id="typeInput" ng-model="searchType">
+              <option value="1">Events</option>
+              <option value="2">Restaurants</option>
+            </select>
+          </div>
+          <div class="three columns">
+            <button class="u-full-width button-primary" ng-click="search()">Search</button>
+          </div>
         </div>
       </div>
-    </div>
-    <div ng-class="{'container-result': true, 'container-result-view': containerIsTop}">
-      <div ng-show="error" class="error">
-        {{error}}
-      </div>
-      <div class="spinner" ng-show="loading">
-        <div class="double-bounce1"></div>
-        <div class="double-bounce2"></div>
-      </div>
-      <div ng-show="results">
-        <h1 style="text-align: center;">Results</h1>
-        <div ng-repeat="result in results">
-          <h4>{{result.name}}</h4>
+      <div ng-class="{'container-result': true, 'container-result-view': containerIsTop}">
+        <div ng-show="error" class="error">
+          {{error}}
+        </div>
+        <div class="spinner" ng-show="loading">
+          <div class="double-bounce1"></div>
+          <div class="double-bounce2"></div>
+        </div>
+        <div ng-show="results">
+          <h1 style="text-align: center;">Results</h1>
+          <div ng-repeat="result in results" class="result">
+            <h4>{{result.name}}</h4>
+            <h5><img src="/images/icons/u32.png"/> Artists: <span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
+            <h5><img src="/images/icons/l32.png"/> Location: {{result.venue}}</h5>
+            <h5><img src="/images/icons/c32.png"/> Time: {{result.startTime}}</h5>
+            <p ng-show="result.description"><img src="/images/icons/i32.png"/> {{result.description}}</p>
+          </div>
         </div>
       </div>
     </div>
