@@ -1,6 +1,7 @@
 package core;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,7 +15,7 @@ public class Event {
 	private String api;
 
 	private String name;
-	private String artist; //for now only 1 artist is stored, because jackson is ugly with arraylists
+	private ArrayList<Artist> artists = new ArrayList<>();
 	private String startTime; //date gets too ugly with jackson, so we use string
 	private String endTime;
 	private String description;
@@ -28,4 +29,8 @@ public class Event {
 	/*-------------------------------------------------------------*/
 	private float latitude;
 	private float longitude;
+
+	public void addArtist(String name) {
+		artists.add(new Artist(name));
+	}
 }

@@ -66,7 +66,8 @@ public class Main {
 				sj.add(mapper.writeValueAsString(e));
 			}
 
-			return events.isEmpty() ? "nope" : sj.toString();
+			System.out.println(sj.toString());
+			return sj.toString();
 		});
 
         /* Example for the 5gig API */

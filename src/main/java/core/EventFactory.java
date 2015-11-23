@@ -25,7 +25,7 @@ public class EventFactory {
 		//parse artists
 		JsonArray artists = json.get("artists").asArray();
 		for (JsonValue value : artists) {
-			event.setArtist(value.asObject().get("name").asString());
+			event.addArtist(value.asObject().get("name").asString());
 		}		
 
 		//get image
