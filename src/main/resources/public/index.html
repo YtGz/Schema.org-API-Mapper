@@ -47,6 +47,9 @@
         <div ng-show="results">
           <h1 style="text-align: center;">Results</h1>
           <div ng-repeat="result in results" class="result">
+            <div style ="float: right;" ng-show="result.image">
+              <img ng-src="{{result.image}}" stlye="border: 1px solid black;"/>
+            </div>
             <h4>{{result.name}}</h4>
             <h5><img src="/images/icons/u32.png"/> Artists: <span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
             <h5><img src="/images/icons/l32.png"/> Location: {{result.venue}}</h5>
