@@ -8,18 +8,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Embedded;
+
+@Entity
 @Data // i.a. generate getter/setter
 @JsonIgnoreProperties(ignoreUnknown = true) // ignore JSON properties not used by this class
 public class Event {
+    @Id @GeneratedValue @JsonIgnore
+    Long id;
+
 	@JsonIgnore
 	private String api;
 
 	private String name;
+	@OneToMany @Embedded
 	private ArrayList<Artist> artists = new ArrayList<>();
 	private String startTime; //date gets too ugly with jackson, so we use string
 	private String endTime;
 	private String description;
-	private URL image;
+	private String image;
 	private String venue; //the name of the venue
 	private String street;
 	/*-------------------------------------------------------------*/

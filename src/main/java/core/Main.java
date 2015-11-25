@@ -3,6 +3,7 @@ package core;
 import static spark.Spark.*;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -18,11 +19,14 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.JsonArray;
 
+import core.Database;
 import core.Event;
 import core.EventFactory;
 import core.Restaurant;
 import core.RestaurantFactory;
 import core.Endpoints;
+
+import javax.persistence.*;
 
 public class Main {
 
@@ -30,6 +34,11 @@ public class Main {
         port(getHerokuAssignedPort());
 		//Tell spark where our static files are
 		staticFileLocation("/public");
+		
+		//get events/restaurants at server start
+		updateDatabase();
+
+		//--- ROUTES
 
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
 
@@ -38,27 +47,7 @@ public class Main {
 		*/
 		post("/search", "application/json",(req, res) -> {
 
-			EventFactory event_factory = new EventFactory();
-			ArrayList<Event> events = new ArrayList<>();
-
-			//create json object from url
-			URL endpoint = new URL(Endpoints.fivegig);
-			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
-			JsonObject json = Json.parse(endpoint_content).asObject();
-			
-			//check if 5gig api call was successful
-			if (!json.get("status").asString().equals("success")) {
-				return "error with 5gig call";
-			}
-
-			//parse 5gig response
-			JsonArray json_events = json.get("response").asObject().get("gigs").asArray();
-			
-			for (JsonValue value : json_events) {
-				events.add(event_factory.createGigEvent(value.asObject()));
-			}
-
-			//return all events as a json array
+			List<Event> events = Database.getAllEvents();
 			StringJoiner sj = new StringJoiner(",", "[", "]");
 			ObjectMapper mapper = new ObjectMapper();
 
@@ -66,7 +55,6 @@ public class Main {
 				sj.add(mapper.writeValueAsString(e));
 			}
 
-			System.out.println(sj.toString());
 			return sj.toString();
 		});
 
@@ -147,4 +135,49 @@ public class Main {
         return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
     }
 
+	//updates database with api results
+	static void updateDatabase() {
+		//delete old database
+		Database.wipeDatabase();
+
+		//--- Events ---
+		EventFactory event_factory = new EventFactory();
+		ArrayList<Event> events = new ArrayList<>();
+
+		//-- 5gig API --
+		try {
+			//create json object from url
+			URL endpoint = new URL(Endpoints.fivegig);
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+			
+			//check if 5gig api call was successful
+			if (json.get("status").asString().equals("success")) {
+				//parse 5gig response
+				JsonArray json_events = json.get("response").asObject().get("gigs").asArray();
+	
+				for (JsonValue value : json_events) {
+					events.add(event_factory.createGigEvent(value.asObject()));
+				}
+			}
+			else {
+				System.out.println("API Error with 5gig call");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Exception: API Error with 5gig call");
+		}
+		//-- X API --
+
+		//--- Restaurants ---
+		RestaurantFactory restaurant_factory = new RestaurantFactory();
+		ArrayList<Restaurant> restaurants = new ArrayList<>();
+
+		//-- X API --
+
+		//--- Add Events/Restaurants to Database ---
+		Database.addAllEvents(events);
+		Database.addAllRestaurants(restaurants);
+
+	}
 }
