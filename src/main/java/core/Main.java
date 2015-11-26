@@ -46,13 +46,33 @@ public class Main {
 		 * returns all events/restaurants (depending on post param) as json
 		*/
 		post("/search", "application/json",(req, res) -> {
+			JsonObject request = Json.parse(req.body()).asObject();
 
-			List<Event> events = Database.getAllEvents();
+			//get the request type (1 = Events, 2 = restaurants, Default = 1)
+			Integer type = Integer.parseInt(request.getString("type","1"));
+
+			//get the search term or "" if empty
+			String text = request.getString("text","");
+
+			//return events or restaurants depending on type and search text
 			StringJoiner sj = new StringJoiner(",", "[", "]");
 			ObjectMapper mapper = new ObjectMapper();
 
-			for (Event e : events) {
-				sj.add(mapper.writeValueAsString(e));
+			if (type == 1) {
+				List<Event> events = Database.getAllEvents();
+
+				for (Event e : events) {
+					//TODO filter results by search text
+					sj.add(mapper.writeValueAsString(e));
+				}
+			}
+			else if (type == 2) {
+				List<Restaurant> restaurants = Database.getAllRestaurants();
+				
+				for (Restaurant r : restaurants) {
+					//TODO filter results by search text
+					sj.add(mapper.writeValueAsString(r));
+				}
 			}
 
 			return sj.toString();
