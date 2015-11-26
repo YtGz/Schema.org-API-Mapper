@@ -14,6 +14,9 @@ public class Database {
 	private static final String database = "database/db.odb";
 
 	public static List<Event> getAllEvents() {
+		return getAllEvents("");
+	}
+	public static List<Event> getAllEvents(String query_options) {
 			// Open a database connection
 		    // (create a new database if it doesn't exist yet):
 		    EntityManagerFactory emf =
@@ -21,7 +24,8 @@ public class Database {
 		    EntityManager em = emf.createEntityManager();
 
 			//get all events from database
-			List<Event> events = em.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+			List<Event> events = 
+			  em.createQuery("SELECT e FROM Event e " + query_options, Event.class).getResultList();
 	
 			em.close();
 			emf.close();
@@ -53,6 +57,9 @@ public class Database {
 		}
 	}
 	public static List<Restaurant> getAllRestaurants() {
+		return getAllRestaurants("");
+	}
+	public static List<Restaurant> getAllRestaurants(String query_options) {
 			// Open a database connection
 		    // (create a new database if it doesn't exist yet):
 		    EntityManagerFactory emf =
@@ -60,7 +67,8 @@ public class Database {
 		    EntityManager em = emf.createEntityManager();
 
 			//get all restaurants from database
-			List<Restaurant> restaurants = em.createQuery("SELECT r FROM Restaurant r", Restaurant.class).getResultList();
+			List<Restaurant> restaurants = 
+			  em.createQuery("SELECT r FROM Restaurant r " + query_options, Restaurant.class).getResultList();
 	
 			em.close();
 			emf.close();

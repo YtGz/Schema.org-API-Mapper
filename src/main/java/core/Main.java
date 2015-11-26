@@ -59,18 +59,26 @@ public class Main {
 			ObjectMapper mapper = new ObjectMapper();
 
 			if (type == 1) {
-				List<Event> events = Database.getAllEvents();
-
+				List<Event> events;
+				if (text.isEmpty()) {
+					events = Database.getAllEvents();
+				}
+				else {
+					events = Database.getAllEvents("WHERE LOWER(e.name) LIKE LOWER('%"+text+"%')");
+				}
 				for (Event e : events) {
-					//TODO filter results by search text
 					sj.add(mapper.writeValueAsString(e));
 				}
 			}
 			else if (type == 2) {
-				List<Restaurant> restaurants = Database.getAllRestaurants();
-				
+				List<Restaurant> restaurants;
+				if (text.isEmpty()) {
+					restaurants = Database.getAllRestaurants();
+				}
+				else {
+					restaurants = Database.getAllRestaurants("WHERE LOWER(r.name) LIKE LOWER('%"+text+"%')");
+				}
 				for (Restaurant r : restaurants) {
-					//TODO filter results by search text
 					sj.add(mapper.writeValueAsString(r));
 				}
 			}
