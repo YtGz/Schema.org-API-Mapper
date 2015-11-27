@@ -41,6 +41,10 @@ public class Database {
 		try {
 	    	em.getTransaction().begin();
 			for (Event e : events) {
+				for (Artist a : e.getArtists()) {
+					a.setEvent(e);
+					em.persist(a);
+				}
 				em.persist(e);
 			}
 			em.getTransaction().commit();

@@ -1,6 +1,7 @@
 package core;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -12,7 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Embedded;
 
 @Entity
 @Data // i.a. generate getter/setter
@@ -25,8 +25,8 @@ public class Event {
 	private String api;
 
 	private String name;
-	@OneToMany @Embedded
-	private ArrayList<Artist> artists = new ArrayList<>();
+	@OneToMany(mappedBy = "event") 
+	private List<Artist> artists = new ArrayList<>();
 	private String startTime; //date gets too ugly with jackson, so we use string
 	private String endTime;
 	private String description;

@@ -3,18 +3,23 @@ package core;
 import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Embedded;
-import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 
-@Embeddable
+@Entity
 @Data
 public class Artist {
+    @Id @GeneratedValue @JsonIgnore
+    Long id;
+
 	private String name;
+
+	@ManyToOne @JsonIgnore
+	private Event event;
 
     public Artist(@JsonProperty("name") String name) {
         this.name = name;
