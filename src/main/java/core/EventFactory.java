@@ -35,7 +35,7 @@ public class EventFactory {
 		String img = json.get("images").asObject().get("small").asString();
 
 		if (!img.equals("")) {
-			try {event.setImage(new URL(img));} catch(Exception e){}
+			try {event.setImage(img);} catch(Exception e){}
 		}
 
 		//parse location data
