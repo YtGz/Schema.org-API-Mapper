@@ -48,7 +48,7 @@ public class EventFactory {
 
 		//get event time
 		try {
-			SimpleDateFormat f1 = new SimpleDateFormat("yyyy-dd-MM hh:mm:ss");
+			SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Date date = f1.parse(json.get("startDate").asString());
 			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | HH:mm");
 			event.setStartTime(f2.format(date));
