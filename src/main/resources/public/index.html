@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/raytracer.css">
 
+  <script src="http://maps.googleapis.com/maps/api/js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
   <script src="js/raytracer.js"></script>
 
@@ -26,9 +27,7 @@
             <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-model="searchText">
           </div>
           <div class="three columns">
-            <select class="u-full-width" id="typeInput" ng-model="searchType">
-              <option value="1">Events</option>
-              <option value="2">Restaurants</option>
+            <select ng-init="searchType = searchOptions[0]" class="u-full-width" id="typeInput" ng-model="searchType" ng-options="o.name for o in searchOptions">
             </select>
           </div>
           <div class="three columns">
@@ -52,8 +51,11 @@
             </div>
             <h4>{{result.name}}</h4>
             <h5 class="artist"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
-            <h5 class="location">{{result.venue}}</h5>
             <h5 class="date">{{result.startTime}}</h5>
+            <h5 class="location">{{result.venue}}
+              <div style="float:right"><span ng-click="loadMap($index, result)" class="maps-icon"></span></div>
+            </h5>
+            <div id="map_{{$index}}" ng-class="{'map': true, 'map-show': result.showMap}"></div>
           </div>
         </div>
       </div>

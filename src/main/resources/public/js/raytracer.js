@@ -3,6 +3,15 @@ angular.module('Raytracer', [])
     $scope.containerIsTop = false;
     $scope.loading = false;
 
+    //search option
+    $scope.searchOptions = [{
+       name: 'Events',
+       value: '1'
+    }, {
+       name: 'Restaurants',
+       value: '2'
+    }];
+
     $scope.search = function() {
       $scope.loading = true;
       if(!$scope.containerIsTop){
@@ -16,7 +25,7 @@ angular.module('Raytracer', [])
         },
         data: {
           text: $scope.searchText,
-          type: $scope.searchType
+          type: $scope.searchType.value
         }
       };
       $http(req)
@@ -30,4 +39,29 @@ angular.module('Raytracer', [])
           $scope.loading = false;
         });
     };
+
+    $scope.loadMap = function($id, $result) {
+      if($result.showMap == true)
+        return;
+
+      $result.showMap = true;
+
+      setTimeout(function(){
+        var latlng = new google.maps.LatLng($result.latitude, $result.longitude);
+
+        var mapProp = {
+          center: latlng,
+          zoom: 15,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map=new google.maps.Map(document.getElementById("map_" + $id), mapProp);
+
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map,
+          title: $result.name
+        });
+      }, 1000);
+
+    }
   }]);
