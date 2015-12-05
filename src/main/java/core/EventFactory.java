@@ -8,6 +8,9 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.JsonArray;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EventFactory {
 
@@ -44,7 +47,14 @@ public class EventFactory {
 		event.setLongitude(Float.parseFloat(venue.get("longitude").asString()));
 
 		//get event time
-		event.setStartTime(json.get("startDate").asString());
+		try {
+			SimpleDateFormat f1 = new SimpleDateFormat("yyyy-dd-MM hh:mm:ss");
+			Date date = f1.parse(json.get("startDate").asString());
+			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | hh:mm");
+			event.setStartTime(f2.format(date));
+		} catch (ParseException e) {
+			event.setStartTime("invalid");
+		}
 		event.setEndTime("");
 
 		//return 5gig event
