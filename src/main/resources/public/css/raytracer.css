@@ -20,6 +20,30 @@
   padding-top: 20px;
 }
 
+.artist {
+	background-image: url("../images/icons/u32.png");
+	background-repeat: no-repeat;
+	padding-left: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.location {
+	background-image: url("../images/icons/l32.png");
+	background-repeat: no-repeat;
+	padding-left: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.date {
+	background-image: url("../images/icons/c32.png");
+	background-repeat: no-repeat;
+	padding-left: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+
 .container-image {
   background-image: url("../images/banner.png");
   background-repeat: no-repeat;

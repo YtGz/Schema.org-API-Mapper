@@ -51,10 +51,9 @@
               <img ng-src="{{result.image}}" stlye="border: 1px solid black;"/>
             </div>
             <h4>{{result.name}}</h4>
-            <h5><img src="/images/icons/u32.png"/> Artists: <span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
-            <h5><img src="/images/icons/l32.png"/> Location: {{result.venue}}</h5>
-            <h5><img src="/images/icons/c32.png"/> Time: {{result.startTime}}</h5>
-            <p ng-show="result.description"><img src="/images/icons/i32.png"/> {{result.description}}</p>
+            <h5 class="artist"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
+            <h5 class="location">{{result.venue}}</h5>
+            <h5 class="date">{{result.startTime}}</h5>
           </div>
         </div>
       </div>
