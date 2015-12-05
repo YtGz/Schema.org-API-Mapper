@@ -59,7 +59,7 @@ angular.module('Raytracer', [])
         var marker = new google.maps.Marker({
           position: latlng,
           map: map,
-          title: $result.name
+          title: $result.venue
         });
       }, 1000);
 
