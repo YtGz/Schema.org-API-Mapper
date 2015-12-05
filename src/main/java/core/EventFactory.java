@@ -50,7 +50,7 @@ public class EventFactory {
 		try {
 			SimpleDateFormat f1 = new SimpleDateFormat("yyyy-dd-MM hh:mm:ss");
 			Date date = f1.parse(json.get("startDate").asString());
-			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | hh:mm");
+			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | HH:mm");
 			event.setStartTime(f2.format(date));
 		} catch (ParseException e) {
 			event.setStartTime("invalid");
