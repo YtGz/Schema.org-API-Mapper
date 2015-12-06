@@ -61,4 +61,80 @@ public class EventFactory {
 		return event;
 	}
 
+	//parse a jsonObject of the JamBase API
+	public Event createJBEvent (JsonObject json) {
+		Event event = new Event();
+		event.setApi("jambase");
+
+		//parse event name
+		event.setName(json.get("name").asString());
+
+		//parse event description
+		event.setDescription(json.get("description").asString());
+
+		//parse artists
+		JsonArray artists = json.get("artists").asArray();
+		for (JsonValue value : artists) {
+			event.addArtist(value.asObject().get("name").asString());
+		}		
+
+		//parse location data
+		JsonObject venue = json.get("venue").asObject();
+		event.setVenue(venue.get("name").asString());
+		venue = venue.get("zipcode").asObject();
+
+		//get event time
+		try {
+			SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date date = f1.parse(json.get("startDate").asString());
+			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | HH:mm");
+			event.setStartTime(f2.format(date));
+		} catch (ParseException e) {
+			event.setStartTime("invalid");
+		}
+		event.setEndTime("");
+
+		//return jambase event
+		return event;
+	}
+	
+	//parse a jsonObject of the IBK API
+	public Event createIBKEvent (JsonObject json) {
+		Event event = new Event();
+		event.setApi("ibkevents");
+		
+		/**
+		 * All todo from here on
+		//parse event name
+		event.setName(json.get("name").asString());
+
+		//parse event description
+		event.setDescription(json.get("description").asString());
+
+		//parse artists
+		JsonArray artists = json.get("artists").asArray();
+		for (JsonValue value : artists) {
+			event.addArtist(value.asObject().get("name").asString());
+		}		
+
+		//parse location data
+		JsonObject venue = json.get("venue").asObject();
+		event.setVenue(venue.get("name").asString());
+		venue = venue.get("zipcode").asObject();
+
+		//get event time
+		try {
+			SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date date = f1.parse(json.get("startDate").asString());
+			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | HH:mm");
+			event.setStartTime(f2.format(date));
+		} catch (ParseException e) {
+			event.setStartTime("invalid");
+		}
+		event.setEndTime("");
+
+		//return jambase event
+		return event;
+		*/
+	}
 }
