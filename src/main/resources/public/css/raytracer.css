@@ -52,6 +52,7 @@
 }
 
 .maps-icon:hover{
+	cursor: pointer;
 	background: url('../images/icons/e32.png') -32px 0px;
 }
 

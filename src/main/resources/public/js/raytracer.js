@@ -41,8 +41,10 @@ angular.module('Raytracer', [])
     };
 
     $scope.loadMap = function($id, $result) {
-      if($result.showMap == true)
+      if($result.showMap == true){
+        $result.showMap = false;
         return;
+      }
 
       $result.showMap = true;
 
