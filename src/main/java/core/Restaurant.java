@@ -20,11 +20,12 @@ public class Restaurant {
 	private String api;
 
 	private String name;
-	private String startTime; //date gets too ugly with jackson, so we use string
-	private String endTime;
+	private String registrar;
+	private String phone;
+	private String address;
+	private String status;
 	private String description;
 	private String image;
-	private String venue; //the name of the venue
 	private String street;
 	private float latitude;
 	private float longitude;

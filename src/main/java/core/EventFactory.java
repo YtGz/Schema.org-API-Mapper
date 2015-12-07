@@ -102,7 +102,7 @@ public class EventFactory {
 	public Event createIBKEvent (JsonObject json) {
 		Event event = new Event();
 		event.setApi("ibkevents");
-		
+		return null;
 		/**
 		 * All todo from here on
 		//parse event name
