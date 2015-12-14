@@ -10,6 +10,19 @@ import com.eclipsesource.json.JsonArray;
 import java.net.URL;
 
 public class RestaurantFactory {
+	
+	public Restaurant createYelpRestaurant (JsonObject json) {
+		Restaurant restaurant = new Restaurant();
+		restaurant.setApi("yelp");
+		
+		//parse event name
+		restaurant.setName(json.get("name").asString());
+		
+		//parse primary address of the restaurant
+		restaurant.setAddress(json.get("address").asString());
+		
+		return restaurant;
+	}
 
 	//parse a jsonObject of the OpenMenu.org API into a restaurant
 	public Restaurant createOMRestaurant (JsonObject json) {

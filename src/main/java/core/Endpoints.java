@@ -19,7 +19,7 @@ public class Endpoints {
 	public static final String gutekueche = "https://www.kimonolabs.com/api/5pdrp9hy?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	public static final String lieferservice = "https://www.kimonolabs.com/api/bk436f42?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	// i added yelp because tiroler-wirtshaus, urlauburlaub.at and lokaltipp provide less information and are way harder to scrape
-	// we get moore than 500 restaurants form yelp, do we even need the other sides?
+	// we get more than 500 restaurants form yelp, do we even need the other sides?
 	public static final String yelp = "https://www.kimonolabs.com/api/clo7bsse?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	
 
