@@ -49,21 +49,38 @@ angular.module('Raytracer', [])
       $result.showMap = true;
 
       setTimeout(function(){
-        var latlng = new google.maps.LatLng($result.latitude, $result.longitude);
-
-        var mapProp = {
-          center: latlng,
-          zoom: 15,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map=new google.maps.Map(document.getElementById("map_" + $id), mapProp);
-
-        var marker = new google.maps.Marker({
-          position: latlng,
-          map: map,
-          title: $result.venue
-        });
+    	var latlng;
+    	if($result.latitude == 0 || $result.longitude == 0) {
+    		var geocoder = new google.maps.Geocoder();
+    		 geocoder.geocode({address: $result.venue, region: 'AT'}, function(results, status) {
+    			 if (status == google.maps.GeocoderStatus.OK) {
+    				 latlng = results[0].geometry.location;
+    				 createMap(latlng);
+    		     } else {
+    		       alert("Geocode was not successful for the following reason: " + status);
+    		     }
+    		 });
+    	}
+    	else {
+    		latlng = new google.maps.LatLng($result.latitude, $result.longitude);
+    		createMap(latlng);
+    	}
+        
       }, 1000);
 
+      function createMap(latlng) {
+        	var mapProp = {
+            center: latlng,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var map=new google.maps.Map(document.getElementById("map_" + $id), mapProp);
+
+          var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            title: $result.venue
+          });
+       }
     }
   }]);

@@ -22,7 +22,7 @@ public class Restaurant {
 	private String name;
 	private String registrar;
 	private String phone;
-	private String address;
+	private String venue;//private String address; renamed for now
 	private String status;
 	private String description;
 	private String image;

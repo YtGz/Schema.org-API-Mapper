@@ -19,7 +19,7 @@ public class RestaurantFactory {
 		restaurant.setName(json.get("name").asString());
 		
 		//parse primary address of the restaurant
-		restaurant.setAddress(json.get("address").asString());
+		restaurant.setVenue(json.get("address").asString());
 		
 		return restaurant;
 	}
@@ -39,7 +39,7 @@ public class RestaurantFactory {
 		restaurant.setPhone(json.get("phone").asString());
 		
 		//parse primary address of the restaurant
-		restaurant.setAddress(json.get("address_1").asString());
+		restaurant.setVenue(json.get("address_1").asString());
 		
 		//parse latitude
 		restaurant.setLatitude(Float.parseFloat(json.get("latitude").asString()));
