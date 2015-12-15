@@ -2,6 +2,7 @@ angular.module('Raytracer', [])
   .controller('searchCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.containerIsTop = false;
     $scope.loading = false;
+    $scope.requestType = 1;
 
     //search option
     $scope.searchOptions = [{
@@ -12,11 +13,17 @@ angular.module('Raytracer', [])
        value: '2'
     }];
 
+    $scope.submitSearch = function(keyEvent) {
+      if (keyEvent.which === 13)
+        $scope.search();
+    };
+
     $scope.search = function() {
       $scope.loading = true;
       if(!$scope.containerIsTop){
         $scope.containerIsTop = true;
       }
+      var type = $scope.searchType.value;
       var req = {
         method: 'POST',
         url: '/search',
@@ -31,6 +38,7 @@ angular.module('Raytracer', [])
       $http(req)
         .success(function(res) {
           $scope.error = null;
+          $scope.requestType = type;
           $scope.results = res;
           $scope.loading = false;
         })
@@ -49,21 +57,38 @@ angular.module('Raytracer', [])
       $result.showMap = true;
 
       setTimeout(function(){
-        var latlng = new google.maps.LatLng($result.latitude, $result.longitude);
+    	var latlng;
+    	if($result.latitude == 0 || $result.longitude == 0) {
+    		var geocoder = new google.maps.Geocoder();
+    		 geocoder.geocode({address: $result.venue, region: 'AT'}, function(results, status) {
+    			 if (status == google.maps.GeocoderStatus.OK) {
+    				 latlng = results[0].geometry.location;
+    				 createMap(latlng);
+    		     } else {
+    		       alert("Geocode was not successful for the following reason: " + status);
+    		     }
+    		 });
+    	}
+    	else {
+    		latlng = new google.maps.LatLng($result.latitude, $result.longitude);
+    		createMap(latlng);
+    	}
 
-        var mapProp = {
-          center: latlng,
-          zoom: 15,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map=new google.maps.Map(document.getElementById("map_" + $id), mapProp);
-
-        var marker = new google.maps.Marker({
-          position: latlng,
-          map: map,
-          title: $result.venue
-        });
       }, 1000);
 
+      function createMap(latlng) {
+        	var mapProp = {
+            center: latlng,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var map=new google.maps.Map(document.getElementById("map_" + $id), mapProp);
+
+          var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            title: $result.venue
+          });
+       }
     }
   }]);

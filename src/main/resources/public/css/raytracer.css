@@ -44,6 +44,14 @@
 	line-height: 40px;
 }
 
+.opening-hours {
+	background-image: url("../images/icons/oh32.png");
+	background-repeat: no-repeat;
+	padding-left: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+
 .maps-icon {
 	float: right;
 	width: 32px;
@@ -54,6 +62,32 @@
 .maps-icon:hover{
 	cursor: pointer;
 	background: url('../images/icons/e32.png') -32px 0px;
+}
+
+.dinner-icon {
+	float: right;
+	width: 32px;
+	height: 32px;
+	margin-right: 10px;
+	background: url('../images/icons/d32.png') 0px 0px;
+}
+
+.dinner-icon:hover{
+	cursor: pointer;
+	background: url('../images/icons/d32.png') -32px 0px;
+}
+
+.event-icon {
+	float: right;
+	width: 32px;
+	height: 32px;
+	margin-right: 10px;
+	background: url('../images/icons/ev32.png') 0px 0px;
+}
+
+.event-icon:hover{
+	cursor: pointer;
+	background: url('../images/icons/ev32.png') -32px 0px;
 }
 
 .container-image {

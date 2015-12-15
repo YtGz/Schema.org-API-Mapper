@@ -201,6 +201,30 @@ public class Main {
 		RestaurantFactory restaurant_factory = new RestaurantFactory();
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
 
+		//-- yelp API --
+		try {
+			//create json object from url
+			URL endpoint = new URL(Endpoints.yelp);
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+			
+			//check if yelp api call was successful
+			if (json.get("name").asString().equals("yelp_all")) {
+				//parse yelp response
+				JsonArray json_restaurants = json.get("results").asObject().get("collection1").asArray();
+	
+				for (JsonValue value : json_restaurants) {
+					restaurants.add(restaurant_factory.createYelpRestaurant(value.asObject()));
+				}
+			}
+			else {
+				System.out.println("API Error with yelp call");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Exception: API Error with yelp call");
+		}
+		
 		//-- X API --
 
 		//--- Add Events/Restaurants to Database ---

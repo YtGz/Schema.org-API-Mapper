@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/raytracer.css">
 
+  <link rel="shortcut icon" type="image/x-icon" href="/images/icons/favicon.png">
+
   <script src="http://maps.googleapis.com/maps/api/js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
   <script src="js/raytracer.js"></script>
@@ -24,7 +26,7 @@
       <div ng-class="{'container-search': true, 'container-search-adjust': containerIsTop}">
         <div class="row">
           <div class="six columns">
-            <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-model="searchText">
+            <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-keypress="submitSearch($event)" ng-model="searchText">
           </div>
           <div class="three columns">
             <select ng-init="searchType = searchOptions[0]" class="u-full-width" id="typeInput" ng-model="searchType" ng-options="o.name for o in searchOptions">
@@ -50,10 +52,15 @@
               <img ng-src="{{result.image}}" stlye="border: 1px solid black;"/>
             </div>
             <h4>{{result.name}}</h4>
-            <h5 class="artist"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
-            <h5 class="date">{{result.startTime}}</h5>
+            <h5 class="artist" ng-show="requestType == 1"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
+            <h5 class="date" ng-show="requestType == 1">{{result.startTime}}</h5>
+            <h5 class="opening-hours" ng-show="requestType == 2">{{result.openingHours}}</h5>
             <h5 class="location">{{result.venue}}
-              <div style="float:right"><span ng-click="loadMap($index, result)" class="maps-icon"></span></div>
+              <div style="float:right">
+                <span ng-click="loadMap($index, result)" class="maps-icon"></span>
+                <span class="dinner-icon" ng-show="requestType == 1"></span>
+                <span class="event-icon" ng-show="requestType == 2"></span>
+              </div>
             </h5>
             <div id="map_{{$index}}" ng-class="{'map': true, 'map-show': result.showMap}"></div>
           </div>
