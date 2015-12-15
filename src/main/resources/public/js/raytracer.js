@@ -2,6 +2,7 @@ angular.module('Raytracer', [])
   .controller('searchCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.containerIsTop = false;
     $scope.loading = false;
+    $scope.requestType = 1;
 
     //search option
     $scope.searchOptions = [{
@@ -22,6 +23,7 @@ angular.module('Raytracer', [])
       if(!$scope.containerIsTop){
         $scope.containerIsTop = true;
       }
+      var type = $scope.searchType.value;
       var req = {
         method: 'POST',
         url: '/search',
@@ -36,6 +38,7 @@ angular.module('Raytracer', [])
       $http(req)
         .success(function(res) {
           $scope.error = null;
+          $scope.requestType = type;
           $scope.results = res;
           $scope.loading = false;
         })

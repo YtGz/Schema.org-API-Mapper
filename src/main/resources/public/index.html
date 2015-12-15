@@ -52,10 +52,15 @@
               <img ng-src="{{result.image}}" stlye="border: 1px solid black;"/>
             </div>
             <h4>{{result.name}}</h4>
-            <h5 class="artist"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
-            <h5 class="date">{{result.startTime}}</h5>
+            <h5 class="artist" ng-show="requestType == 1"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
+            <h5 class="date" ng-show="requestType == 1">{{result.startTime}}</h5>
+            <h5 class="opening-hours" ng-show="requestType == 2">{{result.openingHours}}</h5>
             <h5 class="location">{{result.venue}}
-              <div style="float:right"><span ng-click="loadMap($index, result)" class="maps-icon"></span></div>
+              <div style="float:right">
+                <span ng-click="loadMap($index, result)" class="maps-icon"></span>
+                <span class="dinner-icon" ng-show="requestType == 1"></span>
+                <span class="event-icon" ng-show="requestType == 2"></span>
+              </div>
             </h5>
             <div id="map_{{$index}}" ng-class="{'map': true, 'map-show': result.showMap}"></div>
           </div>
