@@ -32,6 +32,7 @@ public class Main {
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
+
 		//Tell spark where our static files are
 		staticFileLocation("/public");
 		
@@ -41,6 +42,57 @@ public class Main {
 		//--- ROUTES
 
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
+
+		/* POST - /find
+		 * returns all events/restaurants in the circumference of a specific restaurant/event
+		 * (depending on post param) as json
+		*/
+		post("/find", "application/json",(req, res) -> {
+			JsonObject request = Json.parse(req.body()).asObject();
+
+			//get the request type (1 = Events, 2 = restaurants, Default = 1)
+			Integer type = Integer.parseInt(request.getString("type","1"));
+
+			//get the id of the specific event/restaurant (-x = error)
+			Long id = Long.parseLong(request.getString("id","-1"));
+			if (id < 0) {
+				return ""; //replace with badrequest or something
+			}
+
+			//get the search radius (Default = 1.0)
+			Float radius = Float.parseFloat(request.getString("radius","1.0"));
+
+			//return events or restaurants depending on type/id and search radius
+			StringJoiner sj = new StringJoiner(",", "[", "]");
+			ObjectMapper mapper = new ObjectMapper();
+
+			//find nearby restaurants
+			if (type == 1) {
+				Event event = Database.getAllEvents("WHERE e.id IN ("+id+")").get(0); // write an extra method for that in database class
+				List<Restaurant> restaurants;
+				restaurants = Database.getAllRestaurants();
+
+				for (Restaurant r : restaurants) {
+					if (inCircumference(event.getLatitude(),event.getLongitude(), r.getLatitude(), r.getLongitude(),radius)) {
+						sj.add(mapper.writeValueAsString(r));
+					}
+				}
+			}
+			//find nearby events
+			else if (type == 2) {
+				Restaurant restaurant = Database.getAllRestaurants("WHERE r.id IN ("+id+")").get(0); // write an extra method for that in database class
+				List<Event> events;
+				events = Database.getAllEvents();
+
+				for (Event e : events) {
+					if (inCircumference(e.getLatitude(),e.getLongitude(), restaurant.getLatitude(), restaurant.getLongitude(),radius)) {
+						sj.add(mapper.writeValueAsString(e));
+					}
+				}
+			}
+
+			return sj.toString();
+		});
 
 		/* POST - /search
 		 * returns all events/restaurants (depending on post param) as json
@@ -187,5 +239,10 @@ public class Main {
 		Database.addAllEvents(events);
 		Database.addAllRestaurants(restaurants);
 
+	}
+
+	/** check if x2,y2 are in circumference of x1,y1 */
+	static boolean inCircumference(Float x1, Float y1, Float x2, Float y2, Float radius) {
+		return true;
 	}
 }
