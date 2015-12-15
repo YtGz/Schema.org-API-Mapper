@@ -120,8 +120,6 @@ public class Main {
 
 	//updates database with api results
 	static void updateDatabase() {
-		//delete old database
-		Database.wipeDatabase();
 
 		//--- Events ---
 		EventFactory event_factory = new EventFactory();
@@ -181,6 +179,9 @@ public class Main {
 		}
 		
 		//-- X API --
+
+		//delete old database
+		Database.wipeDatabase();
 
 		//--- Add Events/Restaurants to Database ---
 		Database.addAllEvents(events);
