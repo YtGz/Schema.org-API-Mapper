@@ -12,6 +12,11 @@ angular.module('Raytracer', [])
        value: '2'
     }];
 
+    $scope.submitSearch = function(keyEvent) {
+      if (keyEvent.which === 13)
+        $scope.search();
+    };
+
     $scope.search = function() {
       $scope.loading = true;
       if(!$scope.containerIsTop){
@@ -65,7 +70,7 @@ angular.module('Raytracer', [])
     		latlng = new google.maps.LatLng($result.latitude, $result.longitude);
     		createMap(latlng);
     	}
-        
+
       }, 1000);
 
       function createMap(latlng) {

@@ -24,7 +24,7 @@
       <div ng-class="{'container-search': true, 'container-search-adjust': containerIsTop}">
         <div class="row">
           <div class="six columns">
-            <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-model="searchText">
+            <input class="u-full-width" type="text" placeholder="Search" id="searchInput" ng-keypress="submitSearch($event)" ng-model="searchText">
           </div>
           <div class="three columns">
             <select ng-init="searchType = searchOptions[0]" class="u-full-width" id="typeInput" ng-model="searchType" ng-options="o.name for o in searchOptions">
