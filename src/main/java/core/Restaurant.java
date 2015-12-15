@@ -13,7 +13,7 @@ import lombok.Data;
 @Data // i.a. generate getter/setter
 @JsonIgnoreProperties(ignoreUnknown = true) // ignore JSON properties not used by this class
 public class Restaurant {
-    @Id @GeneratedValue @JsonIgnore
+    @Id @GeneratedValue
     Long id;
 
 	@JsonIgnore
