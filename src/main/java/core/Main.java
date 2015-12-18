@@ -27,6 +27,7 @@ import core.RestaurantFactory;
 import core.Endpoints;
 
 import javax.persistence.*;
+import java.lang.Math;
 
 public class Main {
 
@@ -199,6 +200,7 @@ public class Main {
 		}
 		catch (Exception e) {
 			System.out.println("Exception: API Error with 5gig call");
+			return;
 		}
 		//-- X API --
 
@@ -228,6 +230,7 @@ public class Main {
 		}
 		catch (Exception e) {
 			System.out.println("Exception: API Error with yelp call");
+			return;
 		}
 		
 		//-- X API --
@@ -243,6 +246,13 @@ public class Main {
 
 	/** check if x2,y2 are in circumference of x1,y1 */
 	static boolean inCircumference(Float x1, Float y1, Float x2, Float y2, Float radius) {
+		float x = x2 - x1;
+		float y = y2 - y1;
+
+		float length = (float)Math.sqrt(x*x + y*y);
+		if (length > radius) {
+			return false;
+		}
 		return true;
 	}
 }
