@@ -116,7 +116,6 @@ angular.module('Raytracer', [])
 
     $scope.addMarker = function(map, result){
       var latlng;
-      alert(result.venue);
       if(result.latitude == 0 || result.longitude == 0) {
     		var geocoder = new google.maps.Geocoder();
     		 geocoder.geocode({address: result.venue, region: 'AT'}, function(results, status) {
