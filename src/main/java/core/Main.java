@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.lang.Thread;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -235,13 +236,54 @@ public class Main {
 		
 		//-- X API --
 
-		//delete old database
+		//-- get restaurant latitude/longitude
+		try{
+			for (Restaurant r : restaurants) {
+				//only query if necessary
+				if (r.getLatitude() < 0.01) {
+					String street = r.getStreet().replace(' ','+');
+					URL endpoint = new URL(Endpoints.geocode + street + ",+6020+Innsbruck");
+					String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+					JsonObject json = Json.parse(endpoint_content).asObject();
+					String status = json.get("status").asString();
+
+					//geocode call successful, parse latitude/longitude
+					if (status.equals("OK")) {
+						JsonObject json_location = json.get("results").asArray().get(0).
+									               asObject().get("geometry").asObject().get("location").asObject();
+						r.setLatitude(json_location.get("lat").asFloat());
+						r.setLongitude(json_location.get("lng").asFloat());
+					}
+					//hit query limit of 2500/day, can only query 10/s now
+					else if (status.equals("OVER_QUERY_LIMIT")) {
+						Thread.sleep(12000);
+						endpoint = new URL(Endpoints.geocode + street + ",+6020+Innsbruck");
+						endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+						json = Json.parse(endpoint_content).asObject();
+						status = json.get("status").asString();
+						if (status.equals("OK")) {
+							JsonObject json_location = json.get("results").asArray().get(0).
+												       asObject().get("geometry").asObject().get("location").asObject();
+							r.setLatitude(json_location.get("lat").asFloat());
+							r.setLongitude(json_location.get("lng").asFloat());
+						}
+						else continue;
+					}
+					else continue;
+				}
+			}
+			
+		}
+		catch(Exception e){
+			System.out.println("Exception: API Error with google geocoding");
+		}
+
+		//--- delete old database
 		Database.wipeDatabase();
 
 		//--- Add Events/Restaurants to Database ---
 		Database.addAllEvents(events);
 		Database.addAllRestaurants(restaurants);
-
 	}
 
 	/** check if x2,y2 are in circumference of x1,y1 */

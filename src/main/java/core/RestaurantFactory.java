@@ -19,7 +19,11 @@ public class RestaurantFactory {
 		restaurant.setName(json.get("name").asString());
 		
 		//parse primary address of the restaurant
-		restaurant.setVenue(json.get("address").asString());
+		String venue = json.get("address").asString();
+		restaurant.setVenue(venue);
+
+		//parse street
+		restaurant.setStreet(venue.split("\n",2)[0]);
 		
 		return restaurant;
 	}
