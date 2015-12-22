@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 @Data // i.a. generate getter/setter
 @JsonIgnoreProperties(ignoreUnknown = true) // ignore JSON properties not used by this class
 public class Event {
-    @Id @GeneratedValue @JsonIgnore
+    @Id @GeneratedValue
     Long id;
 
 	@JsonIgnore

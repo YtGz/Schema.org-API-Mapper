@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.lang.Thread;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,11 +28,13 @@ import core.RestaurantFactory;
 import core.Endpoints;
 
 import javax.persistence.*;
+import java.lang.Math;
 
 public class Main {
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
+
 		//Tell spark where our static files are
 		staticFileLocation("/public");
 		
@@ -41,6 +44,57 @@ public class Main {
 		//--- ROUTES
 
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
+
+		/* POST - /find
+		 * returns all events/restaurants in the circumference of a specific restaurant/event
+		 * (depending on post param) as json
+		*/
+		post("/find", "application/json",(req, res) -> {
+			JsonObject request = Json.parse(req.body()).asObject();
+
+			//get the request type (1 = Events, 2 = restaurants, Default = 1)
+			Integer type = Integer.parseInt(request.getString("type","1"));
+
+			//get the id of the specific event/restaurant (-x = error)
+			Long id = Long.parseLong(request.getString("id","-1"));
+			if (id < 0) {
+				return ""; //replace with badrequest or something
+			}
+
+			//get the search radius (Default = 1.0)
+			Float radius = Float.parseFloat(request.getString("radius","1.0"));
+
+			//return events or restaurants depending on type/id and search radius
+			StringJoiner sj = new StringJoiner(",", "[", "]");
+			ObjectMapper mapper = new ObjectMapper();
+
+			//find nearby restaurants
+			if (type == 1) {
+				Event event = Database.getAllEvents("WHERE e.id IN ("+id+")").get(0); // write an extra method for that in database class
+				List<Restaurant> restaurants;
+				restaurants = Database.getAllRestaurants();
+
+				for (Restaurant r : restaurants) {
+					if (inCircumference(event.getLatitude(),event.getLongitude(), r.getLatitude(), r.getLongitude(),radius)) {
+						sj.add(mapper.writeValueAsString(r));
+					}
+				}
+			}
+			//find nearby events
+			else if (type == 2) {
+				Restaurant restaurant = Database.getAllRestaurants("WHERE r.id IN ("+id+")").get(0); // write an extra method for that in database class
+				List<Event> events;
+				events = Database.getAllEvents();
+
+				for (Event e : events) {
+					if (inCircumference(e.getLatitude(),e.getLongitude(), restaurant.getLatitude(), restaurant.getLongitude(),radius)) {
+						sj.add(mapper.writeValueAsString(e));
+					}
+				}
+			}
+
+			return sj.toString();
+		});
 
 		/* POST - /search
 		 * returns all events/restaurants (depending on post param) as json
@@ -86,51 +140,6 @@ public class Main {
 			return sj.toString();
 		});
 
-        /* Example for the 5gig API */
-        get("/5gigtest", (req, res) -> {
-        	try {
-        		/* Jackson ObjectMapper maps JSON to an arbitrary Java class. */
-	        	ObjectMapper mapper = new ObjectMapper();
-	        	// Got a Java class that data maps to nicely? If so:
-	        	//		MyFancyClass mfc = mapper.readValue(url, MyFancyClass.class);
-	        	//
-	        	// Or: if no class (and don't need one), just map to Map.class:
-	        	//		Map<String,Object> map = mapper.readValue(url, new TypeReference<Map<String, Object>>(){});
-	        	
-	        	URL endpoint = new URL("http://www.nvivo.es/api/request.php?api_key=90c164a1d82540d7be50d54f4e887cb2&method=user.getEvents&user=hermzz&format=json");
-	        	Map<String,Object> map = mapper.readValue(endpoint, new TypeReference<Map<String, Object>>(){}); 	//TypeReference is only needed to pass generic type definition
-	        	/* Display part of the parsed JSON */
-	        	return map.get("status");
-        	}
-        	catch (JsonParseException e) {
-	            res.status(400);
-	            return "";
-        	}
-        });
-        
-        /* Example for using the kimono endpoint URL (webhook is better) */
-        get("/kimono_no_webhook", (req, res) -> {
-        	try {
-	        	/* Jackson ObjectMapper maps JSON to an arbitrary Java class. */
-	        	ObjectMapper mapper = new ObjectMapper();
-	        	URL endpoint = new URL("https://www.kimonolabs.com/api/1x4z55uw?apikey=cZIBnjuI5UUN5K420SiYnxeEci5GjKHs");
-	        	WebhookData newData = mapper.readValue(endpoint, WebhookData.class);
-	        	for(EventInfo elem : newData.getResults().getEventInfos()) {
-		        	if (!elem.validate()) {
-		                res.status(400);
-		                return "";
-		            }
-	        	}
-	        	for(EventInfo elem : newData.getResults().getEventInfos()) {
-	        		System.out.println(elem.getPrice());
-	        	}
-	        	return "OK";
-        	}
-        	catch (JsonParseException e) {
-	            res.status(400);
-	            return "";
-        	}
-        });
         
         /* Example webhook integrating with kimono */
         post("/webhook", (req, res) -> {	//we specify 'ibkscraper.herokuapp.com/webhook' as the url to post to (in kimono)
@@ -165,8 +174,6 @@ public class Main {
 
 	//updates database with api results
 	static void updateDatabase() {
-		//delete old database
-		Database.wipeDatabase();
 
 		//--- Events ---
 		EventFactory event_factory = new EventFactory();
@@ -194,6 +201,7 @@ public class Main {
 		}
 		catch (Exception e) {
 			System.out.println("Exception: API Error with 5gig call");
+			return;
 		}
 		//-- X API --
 
@@ -223,13 +231,70 @@ public class Main {
 		}
 		catch (Exception e) {
 			System.out.println("Exception: API Error with yelp call");
+			return;
 		}
 		
 		//-- X API --
 
+		//-- get restaurant latitude/longitude
+		try{
+			for (Restaurant r : restaurants) {
+				//only query if necessary
+				if (r.getLatitude() < 0.01) {
+					String street = r.getStreet().replace(' ','+');
+					URL endpoint = new URL(Endpoints.geocode + street + ",+6020+Innsbruck");
+					String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+					JsonObject json = Json.parse(endpoint_content).asObject();
+					String status = json.get("status").asString();
+
+					//geocode call successful, parse latitude/longitude
+					if (status.equals("OK")) {
+						JsonObject json_location = json.get("results").asArray().get(0).
+									               asObject().get("geometry").asObject().get("location").asObject();
+						r.setLatitude(json_location.get("lat").asFloat());
+						r.setLongitude(json_location.get("lng").asFloat());
+					}
+					//hit query limit of 2500/day, can only query 10/s now
+					else if (status.equals("OVER_QUERY_LIMIT")) {
+						Thread.sleep(12000);
+						endpoint = new URL(Endpoints.geocode + street + ",+6020+Innsbruck");
+						endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+						json = Json.parse(endpoint_content).asObject();
+						status = json.get("status").asString();
+						if (status.equals("OK")) {
+							JsonObject json_location = json.get("results").asArray().get(0).
+												       asObject().get("geometry").asObject().get("location").asObject();
+							r.setLatitude(json_location.get("lat").asFloat());
+							r.setLongitude(json_location.get("lng").asFloat());
+						}
+						else continue;
+					}
+					else continue;
+				}
+			}
+			
+		}
+		catch(Exception e){
+			System.out.println("Exception: API Error with google geocoding");
+		}
+
+		//--- delete old database
+		Database.wipeDatabase();
+
 		//--- Add Events/Restaurants to Database ---
 		Database.addAllEvents(events);
 		Database.addAllRestaurants(restaurants);
+	}
 
+	/** check if x2,y2 are in circumference of x1,y1 */
+	static boolean inCircumference(Float x1, Float y1, Float x2, Float y2, Float radius) {
+		float x = x2 - x1;
+		float y = y2 - y1;
+
+		float length = (float)Math.sqrt(x*x + y*y);
+		if (length > radius) {
+			return false;
+		}
+		return true;
 	}
 }
