@@ -33,7 +33,12 @@ public class Main {
 		staticFileLocation("/public");
 		
 		//get events/restaurants at server start
-		updateDatabase();
+		Thread t1 = new Thread(new Runnable() {
+			public void run() {
+				updateDatabase();
+			}
+		});  
+		t1.start();
 
 		//--- ROUTES
 
