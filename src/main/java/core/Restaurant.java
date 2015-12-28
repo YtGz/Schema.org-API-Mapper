@@ -28,7 +28,7 @@ public class Restaurant {
 	private String address;
 	private String link;
 	private String linkText;
-	private String priceSpan;
+	private String priceSpread;
 	private ArrayList<String> type;
 	private String[] openingHours = new String[7]; 
 	private String status;
@@ -42,7 +42,7 @@ public class Restaurant {
 		/* 
 		 	System.out.println("api: " + api + " Name: " + name + " Phone: " + ((phone == null) ? "" : phone) + " Address: " + address + " linkText: " + ((linkText == null) ? "" : linkText) + " priceSpan: " + priceSpan + 
 				" Type: " + type.toString() + " opening Hours: [" + ((openingHours == null) ? "" : openingHours.toString()) + "] Image: " + ((image == null) ? "" : image)); //*/
-		return "api: " + api + " Name: " + name + " Phone: " + ((phone == null) ? "" : phone) + " Address: " + address + " linkText: " + ((linkText == null) ? "" : linkText) + " priceSpan: " + priceSpan + 
+		return "api: " + api + " Name: " + name + " Phone: " + ((phone == null) ? "" : phone) + " Address: " + address + " linkText: " + ((linkText == null) ? "" : linkText) + " priceSpread: " + priceSpread + 
 				" Type: " + type.toString() + " opening Hours: [" + ((openingHours == null) ? "" : ("mon: " + openingHours[0] + " tue: " + openingHours[1] + " wed: " + openingHours[2] + " thu: " + openingHours[3] + " fri: " + openingHours[4] + " sat: " + openingHours[5] + " sun: " + openingHours[6])) + "] Image: " + ((image == null) ? "" : image) + "\n\n";
 		
 	}

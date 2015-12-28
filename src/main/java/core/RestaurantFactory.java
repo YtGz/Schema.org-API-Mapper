@@ -24,7 +24,7 @@ public class RestaurantFactory {
 		restaurant.setStreet(street);
 		
 		//insert priceclass of the restaurant
-		restaurant.setPriceSpan(price);
+		restaurant.setPriceSpread(price);
 		
 		// insert given type of the restaurant
 		restaurant.setType(type);
