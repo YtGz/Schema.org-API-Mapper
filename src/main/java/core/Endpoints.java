@@ -30,6 +30,12 @@ public class Endpoints {
 	// we get more than 500 restaurants form yelp, do we even need the other sides?
 	public static final String yelp = 
 		"https://www.kimonolabs.com/api/clo7bsse?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
-	
 
+	// had to split the results into 3 parts because kimono can return only 2500 lines per scrape 
+	public static final String yelpBasics1 = "https://www.kimonolabs.com/api/6gt16dhc?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR";
+	public static final String yelpBasics2 = "https://www.kimonolabs.com/api/7j31y03i?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR";
+	public static final String yelpBasics3 = "https://www.kimonolabs.com/api/cha0w3tc?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR";
+	public static final String yelpOpeningHours1 = "https://www.kimonolabs.com/api/706o0x50?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR";
+	public static final String yelpOpeningHours2 = "https://www.kimonolabs.com/api/cqeg2yla?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR";
+	public static final String yelpOpeningHours3 = "https://www.kimonolabs.com/api/2ij63isq?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR";
 }

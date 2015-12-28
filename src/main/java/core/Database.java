@@ -94,6 +94,7 @@ public class Database {
 		}
 		catch (Exception r) {
 			System.out.println("transaction error (add all restaurants)");
+			System.out.println(r.toString());
 		}
 		finally {
 			if (em.getTransaction().isActive()) {

@@ -5,15 +5,11 @@ import static spark.Spark.*;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.StringJoiner;
 import java.lang.Thread;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.ObjectBuffer;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.io.IOUtils;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
@@ -24,10 +20,8 @@ import core.Database;
 import core.Event;
 import core.EventFactory;
 import core.Restaurant;
-import core.RestaurantFactory;
 import core.Endpoints;
 
-import javax.persistence.*;
 import java.lang.Math;
 
 public class Main {
@@ -174,7 +168,6 @@ public class Main {
 
 	//updates database with api results
 	static void updateDatabase() {
-
 		//--- Events ---
 		EventFactory event_factory = new EventFactory();
 		ArrayList<Event> events = new ArrayList<>();
@@ -204,38 +197,60 @@ public class Main {
 			return;
 		}
 		//-- X API --
-
 		//--- Restaurants ---
-		RestaurantFactory restaurant_factory = new RestaurantFactory();
-		ArrayList<Restaurant> restaurants = new ArrayList<>();
-
-		//-- yelp API --
+		// RestaurantFactory restaurant_factory = new RestaurantFactory();
+		ArrayList<Restaurant> restaurants = new ArrayList<>(600);
+		//-- yelp API part 1 code is mostly duplicated for part 2 and 3--
 		try {
+
+			// had to split it up into 3 parts because Kimono can not return more than 2500 rows
+
 			//create json object from url
-			URL endpoint = new URL(Endpoints.yelp);
-			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
-			JsonObject json = Json.parse(endpoint_content).asObject();
+			URL endpoint_basics = new URL(Endpoints.yelpBasics1);
+			String endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
+			JsonObject json_basics_1 = Json.parse(endpoint_basics_content).asObject();
 			
-			//check if yelp api call was successful
-			if (json.get("name").asString().equals("yelp_all")) {
-				//parse yelp response
-				JsonArray json_restaurants = json.get("results").asObject().get("collection1").asArray();
-	
-				for (JsonValue value : json_restaurants) {
-					restaurants.add(restaurant_factory.createYelpRestaurant(value.asObject()));
-				}
-			}
-			else {
-				System.out.println("API Error with yelp call");
-			}
-		}
-		catch (Exception e) {
+			//create json object from url
+			URL endpoint_oh = new URL(Endpoints.yelpOpeningHours1);
+			String endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
+			JsonObject json_oh_1 = Json.parse(endpoint_oh_content).asObject();
+			
+			endpoint_basics = new URL(Endpoints.yelpBasics2);
+			endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
+			JsonObject json_basics_2 = Json.parse(endpoint_basics_content).asObject();
+			
+			//create json object from url
+			endpoint_oh = new URL(Endpoints.yelpOpeningHours2);
+			endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
+			JsonObject json_oh_2 = Json.parse(endpoint_oh_content).asObject();
+			
+			endpoint_basics = new URL(Endpoints.yelpBasics3);
+			endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
+			JsonObject json_basics_3 = Json.parse(endpoint_basics_content).asObject();
+			
+			//create json object from url
+			endpoint_oh = new URL(Endpoints.yelpOpeningHours3);
+			endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
+			JsonObject json_oh_3 = Json.parse(endpoint_oh_content).asObject();
+			
+			// had to split it up into 3 parts because Kimono can not return more than 2500 rows
+			YelpParser.parseFromAPIs(json_basics_1, json_oh_1, restaurants);
+			System.out.println("Done with parsing part 1");
+			YelpParser.parseFromAPIs(json_basics_2, json_oh_2, restaurants);
+			System.out.println("Done with parsing part 2");
+			YelpParser.parseFromAPIs(json_basics_3, json_oh_3, restaurants);
+			System.out.println("Done with parsing part 3");
+
+		} catch (Exception e) {
 			System.out.println("Exception: API Error with yelp call");
+			System.out.println(e.toString());
 			return;
 		}
 		
+	//	System.out.println(restaurants.toString());
+		
 		//-- X API --
-
+		System.out.println("Trying to get latitude/longitude");
 		//-- get restaurant latitude/longitude
 		try{
 			for (Restaurant r : restaurants) {
@@ -278,9 +293,9 @@ public class Main {
 			System.out.println("Exception: API Error with google geocoding");
 		}
 
+		System.out.println("done with parsing, doing database stuff now");
 		//--- delete old database
 		Database.wipeDatabase();
-
 		//--- Add Events/Restaurants to Database ---
 		Database.addAllEvents(events);
 		Database.addAllRestaurants(restaurants);
