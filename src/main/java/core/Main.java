@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
 import java.lang.Thread;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -183,6 +184,32 @@ public class Main {
 		//--- Events ---
 		EventFactory event_factory = new EventFactory();
 		ArrayList<Event> events = new ArrayList<>();
+		
+		//--- Check if event was already added by a different API ---
+		Consumer<Event> addEvent = (e) -> {
+			//If there is a venue that can host more than one event at the same time (e.g. Backstage Club München) than we need to handle the check differently for these specific venues (although I am not aware of one that is located in Innsbruck)
+			for(Event c : events) {
+				if(c.getVenue().equalsIgnoreCase(e.getVenue())) {
+						if(c.getStartTime() != null && e.getStartTime() != null) {	//if possible, check for time
+							if(c.getStartTime().equalsIgnoreCase(e.getStartTime()))
+								return;
+						}
+						else {	//check for name not optimal, as they can differ depending on source API
+							if(c.getName().equalsIgnoreCase(e.getName()))
+								return;
+							for(Artist a : c.getArtists()) {
+								if(a.getName().equalsIgnoreCase(e.getName()))	//some APIs tend to use the artist name instead of the event name
+									return;
+							}
+							for(Artist a : e.getArtists()) {
+								if(a.getName().equalsIgnoreCase(c.getName()))	//some APIs tend to use the artist name instead of the event name
+									return;
+							}
+						}
+				}
+			}
+			events.add(e);
+		};
 
 		//-- 5gig API --
 		try {
@@ -197,7 +224,7 @@ public class Main {
 				JsonArray json_events = json.get("response").asObject().get("gigs").asArray();
 	
 				for (JsonValue value : json_events) {
-					events.add(event_factory.createGigEvent(value.asObject()));
+					addEvent.accept((event_factory.createGigEvent(value.asObject())));
 				}
 			}
 			else {
@@ -213,6 +240,15 @@ public class Main {
 		//--- Restaurants ---
 		RestaurantFactory restaurant_factory = new RestaurantFactory();
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
+		
+		//--- Check if restaurant was already added by a different API ---
+		Consumer<Restaurant> addRestaurant = (r) -> {
+			for(Restaurant c : restaurants) {
+				if(c.getVenue().equalsIgnoreCase(r.getVenue()))
+					return;
+			}
+			restaurants.add(r);
+		};
 
 		//-- yelp API --
 		try {
@@ -227,7 +263,7 @@ public class Main {
 				JsonArray json_restaurants = json.get("results").asObject().get("collection1").asArray();
 	
 				for (JsonValue value : json_restaurants) {
-					restaurants.add(restaurant_factory.createYelpRestaurant(value.asObject()));
+					addRestaurant.accept((restaurant_factory.createYelpRestaurant(value.asObject())));
 				}
 			}
 			else {
