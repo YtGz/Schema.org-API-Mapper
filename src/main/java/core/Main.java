@@ -205,16 +205,16 @@ public class Main {
 		//--- Restaurants ---
 		// RestaurantFactory restaurant_factory = new RestaurantFactory();
 		ArrayList<Restaurant> restaurants = new ArrayList<>(600);
-		//-- yelp API part 1 code is mostly duplicated for part 2 and 3--
+		//-- yelp API --
 		try {
 
 			// had to split it up into 3 parts because Kimono can not return more than 2500 rows
-
+			
 			//create json object from url
 			URL endpoint_basics = new URL(Endpoints.yelpBasics1);
 			String endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
 			JsonObject json_basics_1 = Json.parse(endpoint_basics_content).asObject();
-			
+
 			//create json object from url
 			URL endpoint_oh = new URL(Endpoints.yelpOpeningHours1);
 			String endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
@@ -273,6 +273,7 @@ public class Main {
 									               asObject().get("geometry").asObject().get("location").asObject();
 						r.setLatitude(json_location.get("lat").asFloat());
 						r.setLongitude(json_location.get("lng").asFloat());
+						// System.out.println("Restaurant: " + r.getName() + " Street: " + r.getStreet() + " Latitude: " + r.getLatitude() + " Longitude: " + r.getLongitude());
 					}
 					//hit query limit of 2500/day, can only query 10/s now
 					else if (status.equals("OVER_QUERY_LIMIT")) {
@@ -304,6 +305,8 @@ public class Main {
 		//--- Add Events/Restaurants to Database ---
 		Database.addAllEvents(events);
 		Database.addAllRestaurants(restaurants);
+		System.out.println("added all restaurants to the database");
+
 	}
 
 	/** check if x2,y2 are in circumference of x1,y1 */

@@ -38,10 +38,8 @@ public class Restaurant {
 	private float latitude;
 	private float longitude;
 	
+	@Override
 	public String toString(){
-		/* 
-		 	System.out.println("api: " + api + " Name: " + name + " Phone: " + ((phone == null) ? "" : phone) + " Address: " + address + " linkText: " + ((linkText == null) ? "" : linkText) + " priceSpan: " + priceSpan + 
-				" Type: " + type.toString() + " opening Hours: [" + ((openingHours == null) ? "" : openingHours.toString()) + "] Image: " + ((image == null) ? "" : image)); //*/
 		return "api: " + api + " Name: " + name + " Phone: " + ((phone == null) ? "" : phone) + " Address: " + address + " linkText: " + ((linkText == null) ? "" : linkText) + " priceSpread: " + priceSpread + 
 				" Type: " + type.toString() + " opening Hours: [" + ((openingHours == null) ? "" : ("mon: " + openingHours[0] + " tue: " + openingHours[1] + " wed: " + openingHours[2] + " thu: " + openingHours[3] + " fri: " + openingHours[4] + " sat: " + openingHours[5] + " sun: " + openingHours[6])) + "] Image: " + ((image == null) ? "" : image) + "\n\n";
 		

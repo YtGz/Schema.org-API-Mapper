@@ -11,7 +11,7 @@ public class YelpParser {
 		RestaurantFactory restaurant_factory = new RestaurantFactory();
 		
 		//check if yelp api call was successful
-		if (json_basics.get("name").asString().contains("yelp_3_basics_part") && json_oh.get("name").asString().contains("yelp_3_opening_hours_part")) {
+		if (json_basics.get("name").asString().contains("yelp_3_basics_part") && json_oh.get("name").asString().contains("yelp_3_opening_hours_part") && json_basics.get("lastrunstatus").asString().contains("success") && json_oh.get("lastrunstatus").asString().contains("success")) {
 			//parse yelp response, need 4 result- arrays for the basics- call because we get 4 collections  
 			JsonArray json_restaurants_basics = json_basics.get("results").asObject().get("collection1").asArray();
 			JsonArray json_restaurants_addresses = json_basics.get("results").asObject().get("collection2").asArray();
@@ -33,16 +33,21 @@ public class YelpParser {
 				// restaurant is complete 
 				String address = "";
 				String street = null;
+				boolean first = true;
  				do{ 
- 					boolean first = true;
 					helpString = json_restaurants_addresses.get(addressIndex).asObject().get("address").asString();
 					if (!helpString.equals("Inhaltsrichtlinien")){
 						if(first){
 							street = helpString;
 							first = false;
+							if (street.contains("\n")){
+								street = street.substring(0,street.indexOf("\n"));
+							}
 						}
 						address =  address + " " + helpString.replace("\n", "; ");
 						addressIndex++;
+					}else{
+						first = true;
 					}
 				} while (!helpString.equals("Inhaltsrichtlinien"));
 				addressIndex++;
@@ -123,7 +128,12 @@ public class YelpParser {
 					}
 				} else
 					ohIndex++;
+				
 				restaurants.add(restaurant_factory.createYelpBasics(value.asObject(), address, street, price, types, oh));
+				/*
+				Restaurant r = restaurants.get(restaurants.size() -1);
+				System.out.println("name: " + r.getName() +  " STREET: " + r.getStreet());
+				//*/
 			}
 			// System.out.println(restaurants.toString());
 		} else {
