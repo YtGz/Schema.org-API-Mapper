@@ -5,16 +5,12 @@ import static spark.Spark.*;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.lang.Thread;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.ObjectBuffer;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.io.IOUtils;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
@@ -25,10 +21,8 @@ import core.Database;
 import core.Event;
 import core.EventFactory;
 import core.Restaurant;
-import core.RestaurantFactory;
 import core.Endpoints;
 
-import javax.persistence.*;
 import java.lang.Math;
 
 public class Main {
@@ -180,14 +174,13 @@ public class Main {
 
 	//updates database with api results
 	static void updateDatabase() {
-
 		//--- Events ---
 		EventFactory event_factory = new EventFactory();
 		ArrayList<Event> events = new ArrayList<>();
 		
 		//--- Check if event was already added by a different API ---
 		Consumer<Event> addEvent = (e) -> {
-			//If there is a venue that can host more than one event at the same time (e.g. Backstage Club München) than we need to handle the check differently for these specific venues (although I am not aware of one that is located in Innsbruck)
+			//If there is a venue that can host more than one event at the same time (e.g. Backstage Club Mï¿½nchen) than we need to handle the check differently for these specific venues (although I am not aware of one that is located in Innsbruck)
 			for(Event c : events) {
 				if(c.getVenue().equalsIgnoreCase(e.getVenue())) {
 						if(c.getStartTime() != null && e.getStartTime() != null) {	//if possible, check for time
@@ -236,11 +229,14 @@ public class Main {
 			return;
 		}
 		//-- X API --
-
 		//--- Restaurants ---
+		// RestaurantFactory restaurant_factory = new RestaurantFactory();
+		ArrayList<Restaurant> restaurants = new ArrayList<>(600);
 		RestaurantFactory restaurant_factory = new RestaurantFactory();
-		ArrayList<Restaurant> restaurants = new ArrayList<>();
+	
 		
+		// *************** NO NEED TO DO THIS?!? ****************************
+	/*
 		//--- Check if restaurant was already added by a different API ---
 		Consumer<Restaurant> addRestaurant = (r) -> {
 			for(Restaurant c : restaurants) {
@@ -250,33 +246,57 @@ public class Main {
 			restaurants.add(r);
 		};
 
+//*/
 		//-- yelp API --
 		try {
-			//create json object from url
-			URL endpoint = new URL(Endpoints.yelp);
-			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
-			JsonObject json = Json.parse(endpoint_content).asObject();
+
+			// had to split it up into 3 parts because Kimono can not return more than 2500 rows
 			
-			//check if yelp api call was successful
-			if (json.get("name").asString().equals("yelp_all")) {
-				//parse yelp response
-				JsonArray json_restaurants = json.get("results").asObject().get("collection1").asArray();
-	
-				for (JsonValue value : json_restaurants) {
-					addRestaurant.accept((restaurant_factory.createYelpRestaurant(value.asObject())));
-				}
-			}
-			else {
-				System.out.println("API Error with yelp call");
-			}
-		}
-		catch (Exception e) {
+			//create json object from url
+			URL endpoint_basics = new URL(Endpoints.yelpBasics1);
+			String endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
+			JsonObject json_basics_1 = Json.parse(endpoint_basics_content).asObject();
+
+			//create json object from url
+			URL endpoint_oh = new URL(Endpoints.yelpOpeningHours1);
+			String endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
+			JsonObject json_oh_1 = Json.parse(endpoint_oh_content).asObject();
+			
+			endpoint_basics = new URL(Endpoints.yelpBasics2);
+			endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
+			JsonObject json_basics_2 = Json.parse(endpoint_basics_content).asObject();
+			
+			//create json object from url
+			endpoint_oh = new URL(Endpoints.yelpOpeningHours2);
+			endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
+			JsonObject json_oh_2 = Json.parse(endpoint_oh_content).asObject();
+			
+			endpoint_basics = new URL(Endpoints.yelpBasics3);
+			endpoint_basics_content = IOUtils.toString(endpoint_basics, "UTF-8");
+			JsonObject json_basics_3 = Json.parse(endpoint_basics_content).asObject();
+			
+			//create json object from url
+			endpoint_oh = new URL(Endpoints.yelpOpeningHours3);
+			endpoint_oh_content = IOUtils.toString(endpoint_oh, "UTF-8");
+			JsonObject json_oh_3 = Json.parse(endpoint_oh_content).asObject();
+			
+			// had to split it up into 3 parts because Kimono can not return more than 2500 rows
+			YelpParser.parseFromAPIs(json_basics_1, json_oh_1, restaurants);
+			System.out.println("Done with parsing part 1");
+			YelpParser.parseFromAPIs(json_basics_2, json_oh_2, restaurants);
+			System.out.println("Done with parsing part 2");
+			YelpParser.parseFromAPIs(json_basics_3, json_oh_3, restaurants);
+			System.out.println("Done with parsing part 3");
+		}catch (Exception e) {
 			System.out.println("Exception: API Error with yelp call");
+			System.out.println(e.toString());
 			return;
 		}
 		
+	//	System.out.println(restaurants.toString());
+		
 		//-- X API --
-
+		System.out.println("Trying to get latitude/longitude");
 		//-- get restaurant latitude/longitude
 		try{
 			for (Restaurant r : restaurants) {
@@ -294,6 +314,7 @@ public class Main {
 									               asObject().get("geometry").asObject().get("location").asObject();
 						r.setLatitude(json_location.get("lat").asFloat());
 						r.setLongitude(json_location.get("lng").asFloat());
+						// System.out.println("Restaurant: " + r.getName() + " Street: " + r.getStreet() + " Latitude: " + r.getLatitude() + " Longitude: " + r.getLongitude());
 					}
 					//hit query limit of 2500/day, can only query 10/s now
 					else if (status.equals("OVER_QUERY_LIMIT")) {
@@ -319,12 +340,14 @@ public class Main {
 			System.out.println("Exception: API Error with google geocoding");
 		}
 
+		System.out.println("done with parsing, doing database stuff now");
 		//--- delete old database
 		Database.wipeDatabase();
-
 		//--- Add Events/Restaurants to Database ---
 		Database.addAllEvents(events);
 		Database.addAllRestaurants(restaurants);
+		System.out.println("added all restaurants to the database");
+
 	}
 
 	/** check if x2,y2 are in circumference of x1,y1 */
