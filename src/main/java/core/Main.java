@@ -239,8 +239,10 @@ public class Main {
 	/*
 		//--- Check if restaurant was already added by a different API ---
 		Consumer<Restaurant> addRestaurant = (r) -> {
+			//TODO: within 30km of Innsbruck -> to eliminate geocoding errors
+			
 			for(Restaurant c : restaurants) {
-				if(c.getVenue().equalsIgnoreCase(r.getVenue()))
+				if(c.getLatitude() == r.getLatitude() && c.getLongitude() == r.getLongitude())
 					return;
 			}
 			restaurants.add(r);
