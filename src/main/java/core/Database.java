@@ -105,8 +105,14 @@ public class Database {
 			emf.close();
 		}
 	}
-	public static void wipeDatabase() {
-		new File(event_database).delete();
+	public static void wipeEventDatabase() {
+		new File(event_database).delete();	
+	}
+	public static void wipeRestaurantDatabase() {
 		new File(restaurant_database).delete();
+	}
+	public static void wipeDatabase() {
+		wipeEventDatabase();
+		wipeRestaurantDatabase();
 	}
 }

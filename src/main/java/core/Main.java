@@ -172,71 +172,23 @@ public class Main {
         return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
     }
 
-	//updates database with api results
-	static void updateDatabase() {
-		//--- Events ---
-		EventFactory event_factory = new EventFactory();
-		ArrayList<Event> events = new ArrayList<>();
-		
-		//--- Check if event was already added by a different API ---
-		Consumer<Event> addEvent = (e) -> {
-			//If there is a venue that can host more than one event at the same time (e.g. Backstage Club M�nchen) than we need to handle the check differently for these specific venues (although I am not aware of one that is located in Innsbruck)
-			for(Event c : events) {
-				if(c.getVenue().equalsIgnoreCase(e.getVenue())) {
-						if(c.getStartTime() != null && e.getStartTime() != null) {	//if possible, check for time
-							if(c.getStartTime().equalsIgnoreCase(e.getStartTime()))
-								return;
-						}
-						else {	//check for name not optimal, as they can differ depending on source API
-							if(c.getName().equalsIgnoreCase(e.getName()))
-								return;
-							for(Artist a : c.getArtists()) {
-								if(a.getName().equalsIgnoreCase(e.getName()))	//some APIs tend to use the artist name instead of the event name
-									return;
-							}
-							for(Artist a : e.getArtists()) {
-								if(a.getName().equalsIgnoreCase(c.getName()))	//some APIs tend to use the artist name instead of the event name
-									return;
-							}
-						}
-				}
-			}
-			events.add(e);
-		};
-
-		//-- 5gig API --
-		try {
-			//create json object from url
-			URL endpoint = new URL(Endpoints.fivegig);
-			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
-			JsonObject json = Json.parse(endpoint_content).asObject();
-			
-			//check if 5gig api call was successful
-			if (json.get("status").asString().equals("success")) {
-				//parse 5gig response
-				JsonArray json_events = json.get("response").asObject().get("gigs").asArray();
 	
-				for (JsonValue value : json_events) {
-					addEvent.accept((event_factory.createGigEvent(value.asObject())));
-				}
-			}
-			else {
-				System.out.println("API Error with 5gig call");
-			}
-		}
-		catch (Exception e) {
-			System.out.println("Exception: API Error with 5gig call");
-			return;
-		}
-		//-- X API --
-		//--- Restaurants ---
+	//update the database with api results
+	static void updateDatabase() {
+		updateEventDatabase();
+		updateRestaurantDatabase();
+	}
+
+	//update the database with restaurant api results
+	static void updateRestaurantDatabase() {
+
 		// RestaurantFactory restaurant_factory = new RestaurantFactory();
 		ArrayList<Restaurant> restaurants = new ArrayList<>(600);
 		RestaurantFactory restaurant_factory = new RestaurantFactory();
 	
 		
 		// *************** NO NEED TO DO THIS?!? ****************************
-	/*
+		/*
 		//--- Check if restaurant was already added by a different API ---
 		Consumer<Restaurant> addRestaurant = (r) -> {
 			//TODO: within 30km of Innsbruck -> to eliminate geocoding errors
@@ -248,8 +200,10 @@ public class Main {
 			restaurants.add(r);
 		};
 
-//*/
+		*/
+
 		//-- yelp API --
+		System.out.println("Parsing Yelp API");
 		try {
 
 			// had to split it up into 3 parts because Kimono can not return more than 2500 rows
@@ -295,11 +249,12 @@ public class Main {
 			return;
 		}
 		
-	//	System.out.println(restaurants.toString());
+		//System.out.println(restaurants.toString());
 		
 		//-- X API --
-		System.out.println("Trying to get latitude/longitude");
+		
 		//-- get restaurant latitude/longitude
+		System.out.println("Geocoding latitude/longitude of restaurants!");
 		try{
 			for (Restaurant r : restaurants) {
 				//only query if necessary
@@ -340,15 +295,86 @@ public class Main {
 		}
 		catch(Exception e){
 			System.out.println("Exception: API Error with google geocoding");
+			return;
 		}
 
-		System.out.println("done with parsing, doing database stuff now");
-		//--- delete old database
-		Database.wipeDatabase();
-		//--- Add Events/Restaurants to Database ---
-		Database.addAllEvents(events);
+		System.out.println("done geocoding");
+
+		//-- delete old database
+		Database.wipeRestaurantDatabase();
+
+		//-- Add Restaurants to Database
 		Database.addAllRestaurants(restaurants);
-		System.out.println("added all restaurants to the database");
+		System.out.println("updated restaurant database!");
+	}
+
+	//update the database with event api results
+	static void updateEventDatabase() {
+
+		EventFactory event_factory = new EventFactory();
+		ArrayList<Event> events = new ArrayList<>();
+		
+		//-- Check if event was already added by a different API --
+		Consumer<Event> addEvent = (e) -> {
+			//If there is a venue that can host more than one event at the same time, then we need to handle the check differently
+			//(although I am not aware of one that is located in Innsbruck)
+			for(Event c : events) {
+				if(c.getVenue().equalsIgnoreCase(e.getVenue())) {
+						if(c.getStartTime() != null && e.getStartTime() != null) {	//if possible, check for time
+							if(c.getStartTime().equalsIgnoreCase(e.getStartTime()))
+								return;
+						}
+						else {	//check for name not optimal, as they can differ depending on source API
+							if(c.getName().equalsIgnoreCase(e.getName()))
+								return;
+							for(Artist a : c.getArtists()) {
+								if(a.getName().equalsIgnoreCase(e.getName()))	//some APIs tend to use the artist name instead of the event name
+									return;
+							}
+							for(Artist a : e.getArtists()) {
+								if(a.getName().equalsIgnoreCase(c.getName()))	//some APIs tend to use the artist name instead of the event name
+									return;
+							}
+						}
+				}
+			}
+			events.add(e);
+		};
+
+		//-- 5gig API --
+		System.out.println("Parsing 5gig API");
+		try {
+			//create json object from url
+			URL endpoint = new URL(Endpoints.fivegig);
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+			
+			//check if 5gig api call was successful
+			if (json.get("status").asString().equals("success")) {
+				//parse 5gig response
+				JsonArray json_events = json.get("response").asObject().get("gigs").asArray();
+	
+				for (JsonValue value : json_events) {
+					addEvent.accept((event_factory.createGigEvent(value.asObject())));
+				}
+			}
+			else {
+				System.out.println("API Error with 5gig call");
+				return;
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Exception: API Error with 5gig call");
+			return;
+		}
+		//-- X API --
+
+		//-- delete old database
+		Database.wipeEventDatabase();
+
+		//-- add events to database
+		Database.addAllEvents(events);
+		System.out.println("updated event database!");
 
 	}
 

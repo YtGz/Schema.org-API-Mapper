@@ -2,7 +2,6 @@
 *.class
 
 /database
-*.odb
 
 # Mobile Tools for Java (J2ME)
 
