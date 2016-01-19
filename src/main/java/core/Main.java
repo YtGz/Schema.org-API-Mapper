@@ -9,6 +9,10 @@ import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.lang.Thread;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.apache.commons.io.IOUtils;
@@ -32,14 +36,26 @@ public class Main {
 
 		//Tell spark where our static files are
 		staticFileLocation("/public");
-		
-		//get events/restaurants at server start
-		Thread t1 = new Thread(new Runnable() {
-			public void run() {
-				updateDatabase();
-			}
-		});  
-		t1.start();
+
+		//update events every 2 hours
+		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		exec.scheduleAtFixedRate(new Runnable() {
+		  public void run() {
+			updateEventDatabase();
+		  }
+		}, 0, 2, TimeUnit.HOURS);
+
+		//update restaurants every 5 days
+		long delay = 0;
+		if (Database.existsRestaurantDatabase()) {
+			// delay update if database exists already <- updating restaurants is super slow
+			delay = 5; 
+		}
+		exec.scheduleAtFixedRate(new Runnable() {
+		  public void run() {
+			updateRestaurantDatabase();
+		  }
+		}, delay, 5, TimeUnit.DAYS);
 
 		//--- ROUTES
 

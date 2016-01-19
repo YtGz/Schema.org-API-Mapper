@@ -105,6 +105,12 @@ public class Database {
 			emf.close();
 		}
 	}
+	public static boolean existsEventDatabase() {
+		return (new File(event_database).exists());
+	}
+	public static boolean existsRestaurantDatabase() {
+		return (new File(restaurant_database).exists());
+	}
 	public static void wipeEventDatabase() {
 		new File(event_database).delete();	
 	}
