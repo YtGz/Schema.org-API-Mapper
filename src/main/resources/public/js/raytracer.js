@@ -77,11 +77,17 @@ angular.module('Raytracer', [])
 
 
           if(!result.showMap){
-            $scope.loadMap(id,result, $scope.findResults);
+            $scope.loadMap(id,result, $scope.requestType);
           }
           else {
+            var type;
+            if($scope.requestType == 1)
+              type = 2;
+            else {
+              type = 1;
+            }
             for(var i = 0; i < $scope.findResults.length; i++) {
-              $scope.addMarker(result.map, $scope.findResults[i]);
+              $scope.addMarker(result.map, $scope.findResults[i], type);
             }
           }
         })
@@ -105,18 +111,24 @@ angular.module('Raytracer', [])
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         result.map = new google.maps.Map(document.getElementById("map_" + id), mapProp);
-        $scope.addMarker(result.map, result);
+        $scope.addMarker(result.map, result, $scope.requestType);
         if(marker != null){
+          var type;
+          if($scope.requestType == 1)
+            type = 2;
+          else {
+            type = 1;
+          }
           for(var i = 0; i < $scope.findResults.length; i++) {
-            $scope.addMarker(result.map, marker[i]);
+            $scope.addMarker(result.map, marker[i], type);
           }
         }
       }, 1000);
     };
 
-    $scope.addMarker = function(map, result){
-      var latlng;
-      if(result.latitude == 0 || result.longitude == 0) {
+    $scope.addMarker = function(map, result, type){
+      var latlng, image;
+      if(!result || result.latitude == 0 || result.longitude == 0) {
     		var geocoder = new google.maps.Geocoder();
     		 geocoder.geocode({address: result.venue, region: 'AT'}, function(results, status) {
            if (status == google.maps.GeocoderStatus.OK) {
@@ -130,10 +142,23 @@ angular.module('Raytracer', [])
     	else {
     		latlng = new google.maps.LatLng(result.latitude, result.longitude);
     	}
+      if(type == 1){
+        url = 'images/icons/ev32.png';
+      }
+      else{
+        url = 'images/icons/d32.png';
+      }
+      var image = {
+        url: url,
+        size: new google.maps.Size(32, 32),
+        origin: new google.maps.Point(32, 0),
+        anchor: new google.maps.Point(16, 16)
+      };
       new google.maps.Marker({
         position: latlng,
         map: map,
-        title: result.venue
+        title: result.venue,
+        icon: image
       });
     }
   }]);
