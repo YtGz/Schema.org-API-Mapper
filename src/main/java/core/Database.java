@@ -11,7 +11,8 @@ import core.RestaurantFactory;
 import core.Endpoints;
 
 public class Database {
-	private static final String database = "database/db.odb";
+	private static final String event_database = "database/e_db.odb";
+	private static final String restaurant_database = "database/r_db.odb";
 
 	public static List<Event> getAllEvents() {
 		return getAllEvents("");
@@ -20,7 +21,7 @@ public class Database {
 			// Open a database connection
 		    // (create a new database if it doesn't exist yet):
 		    EntityManagerFactory emf =
-		        Persistence.createEntityManagerFactory(database);
+		        Persistence.createEntityManagerFactory(event_database);
 		    EntityManager em = emf.createEntityManager();
 
 			//get all events from database
@@ -35,7 +36,7 @@ public class Database {
 	public static void addAllEvents(List<Event> events) {
 		// Open a database connection
 		// (create a new database if it doesn't exist yet):
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(database);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(event_database);
 		EntityManager em = emf.createEntityManager();
 
 		try {
@@ -67,7 +68,7 @@ public class Database {
 			// Open a database connection
 		    // (create a new database if it doesn't exist yet):
 		    EntityManagerFactory emf =
-		        Persistence.createEntityManagerFactory(database);
+		        Persistence.createEntityManagerFactory(restaurant_database);
 		    EntityManager em = emf.createEntityManager();
 
 			//get all restaurants from database
@@ -82,7 +83,7 @@ public class Database {
 	public static void addAllRestaurants(List<Restaurant> restaurants) {
 		// Open a database connection
 		// (create a new database if it doesn't exist yet):
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(database);
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(restaurant_database);
 		EntityManager em = emf.createEntityManager();
 
 		try {
@@ -105,6 +106,7 @@ public class Database {
 		}
 	}
 	public static void wipeDatabase() {
-		new File(database).delete();
+		new File(event_database).delete();
+		new File(restaurant_database).delete();
 	}
 }
