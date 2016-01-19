@@ -49,7 +49,7 @@
           <h1 style="text-align: center;" ng-show="mode == 1">Results</h1>
           <div ng-repeat="result in results" class="result">
             <div style ="float: right;" ng-show="result.image">
-              <img ng-src="{{result.image}}" stlye="border: 1px solid black;"/>
+              <img ng-src="{{result.image}}" stlye="border: 1px solid black;" width="80" height="80"/>
             </div>
             <h4>{{result.name}}</h4>
             <h5 class="artist" ng-show="requestType == 1"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
@@ -66,7 +66,7 @@
           <h1  style="text-align: center;" ng-show="mode == 2">Close <span ng-show="requestType == 1">Restaurants</span><span ng-show="requestType == 2">Events</span></h1>
           <div ng-repeat="result in findResults" class="result" ng-show="mode == 2">
             <div style ="float: right;" ng-show="result.image">
-              <img ng-src="{{result.image}}" stlye="border: 1px solid black;"/>
+              <img ng-src="{{result.image}}" stlye="border: 1px solid black;" width="80" height="80"/>
             </div>
             <h4>{{result.name}}</h4>
             <h5 class="artist" ng-show="requestType == 2"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
