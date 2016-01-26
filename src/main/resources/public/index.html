@@ -55,13 +55,21 @@
             <h5 class="artist" ng-show="requestType == 1"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
             <h5 class="date" ng-show="requestType == 1">{{result.startTime}}</h5>
             <h5 class="opening-hours" ng-show="requestType == 2">{{result.openingHours}}</h5>
-            <h5 class="location">{{result.venue}}
+            <h5 class="location"><span ng-show="requestType == 1">{{result.venue}}</span><span ng-show="requestType == 2">{{result.address}}</span>
               <div style="float:right">
                 <span ng-click="loadMap($index, result, null)" class="maps-icon" ng-show="mode == 1"></span>
                 <span ng-class="{'dinner-icon': requestType == 1, 'event-icon': requestType == 2}" ng-click="find($index, result)" ng-show="mode == 1"></span>
               </div>
             </h5>
             <div id="map_{{$index}}" ng-class="{'map': true, 'map-show': result.showMap}"></div>
+          </div>
+          <div>
+            <h4>Range</h4>
+            <div>
+              <input class="nine columns" type="range" ng-model="rangeValue" min="1" max="100">
+              <button class="u-full-width button-primary three columns" ng-click="updateFind()">Find</button>
+            </div>
+            <h5>Selected Range: {{rangeValue / 10}}km</h5>
           </div>
           <h1  style="text-align: center;" ng-show="mode == 2">Close <span ng-show="requestType == 1">Restaurants</span><span ng-show="requestType == 2">Events</span></h1>
           <div ng-repeat="result in findResults" class="result" ng-show="mode == 2">
@@ -72,7 +80,7 @@
             <h5 class="artist" ng-show="requestType == 2"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
             <h5 class="date" ng-show="requestType == 2">{{result.startTime}}</h5>
             <h5 class="opening-hours" ng-show="requestType == 1">{{result.openingHours}}</h5>
-            <h5 class="location">{{result.venue}}</h5>
+            <h5 class="location"><span ng-show="requestType == 2">{{result.venue}}</span><span ng-show="requestType == 1">{{result.address}}</span></h5>
           </div>
         </div>
       </div>
