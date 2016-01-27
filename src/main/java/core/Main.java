@@ -42,7 +42,6 @@ public class Main {
 		exec.scheduleAtFixedRate(new Runnable() {
 		  public void run() {
 			updateEventDatabase();
-			updateRestaurantDatabase();
 		  }
 		}, 0, 2, TimeUnit.HOURS);
 
