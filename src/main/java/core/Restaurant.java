@@ -44,4 +44,80 @@ public class Restaurant {
 				" Type: " + type.toString() + " opening Hours: [" + ((openingHours == null) ? "" : ("mon: " + openingHours[0] + " tue: " + openingHours[1] + " wed: " + openingHours[2] + " thu: " + openingHours[3] + " fri: " + openingHours[4] + " sat: " + openingHours[5] + " sun: " + openingHours[6])) + "] Image: " + ((image == null) ? "" : image) + "\n\n";
 		
 	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public void setApi(String api) {
+		this.api = api;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public void setPriceSpread(String priceSpread) {
+		this.priceSpread = priceSpread;
+	}
+
+	public void setType(ArrayList<String> type) {
+		this.type = type;
+	}
+
+	public void setOpeningHours(String[] openingHours) {
+		this.openingHours = openingHours;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public void setLinkText(String linkText) {
+		this.linkText = linkText;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public void setRegistrar(String registrar) {
+		this.registrar = registrar;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

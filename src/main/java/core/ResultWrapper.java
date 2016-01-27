@@ -20,6 +20,10 @@ import lombok.Data;
 public class ResultWrapper {
 	@JsonProperty("collection1")
 	private ArrayList<EventInfo> eventInfos;
+
+	public ArrayList<EventInfo> getEventInfos() {
+		return eventInfos;
+	}
 }
 
 

@@ -43,4 +43,68 @@ public class Event {
 	public void addArtist(String name) {
 		artists.add(new Artist(name));
 	}
+
+	public List<Artist> getArtists() {
+		return artists;
+	}
+
+	public void setApi(String api) {
+		this.api = api;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public void setVenue(String venue) {
+		this.venue = venue;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public String getVenue() {
+		return venue;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

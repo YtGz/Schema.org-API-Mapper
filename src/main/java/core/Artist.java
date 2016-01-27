@@ -24,4 +24,12 @@ public class Artist {
     public Artist(@JsonProperty("name") String name) {
         this.name = name;
     }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

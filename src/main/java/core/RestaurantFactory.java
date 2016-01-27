@@ -1,10 +1,7 @@
 package core;
 
 import core.Restaurant;
-
 import com.eclipsesource.json.JsonObject;
-
-
 import java.util.ArrayList;
 
 public class RestaurantFactory {

@@ -13,5 +13,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)	//ignore JSON properties not used by this class
 public class WebhookData {
 	private ResultWrapper results;
-	
+
+	public ResultWrapper getResults() {
+		return results;
+	}
 }

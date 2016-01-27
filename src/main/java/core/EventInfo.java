@@ -22,4 +22,8 @@ public class EventInfo {
 		return details != null && date != null && !date.isEmpty() && price != null && location != null
 				&& !location.isEmpty();
 	}
+
+	public String getPrice() {
+		return price;
+	}
 }
