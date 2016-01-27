@@ -192,6 +192,7 @@ public class Main {
 	//update the database with api results
 	static void updateDatabase() {
 		updateEventDatabase();
+		updateRestaurantDatabase();
 	}
 
 	//update the database with restaurant api results
