@@ -30,6 +30,7 @@ import core.Endpoints;
 import java.lang.Math;
 
 public class Main {
+	private static final Integer DEBUG = 1;
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
@@ -258,7 +259,7 @@ public class Main {
 			System.out.println("Done with parsing part 3");
 		}catch (Exception e) {
 			System.out.println("Exception: API Error with yelp call");
-			System.out.println(e.toString());
+			if(DEBUG == 1) {e.printStackTrace();}
 			return;
 		}
 		
@@ -377,6 +378,7 @@ public class Main {
 			}
 		}
 		catch (Exception e) {
+			if(DEBUG == 1) {e.printStackTrace();}
 			System.out.println("Exception: API Error with 5gig call");
 			return;
 		}
@@ -403,7 +405,36 @@ public class Main {
 			}
 		}
 		catch (Exception e) {
+			if(DEBUG == 1) {e.printStackTrace();}
 			System.out.println("Exception: API Error with Treibhaus call");
+			return;
+		}
+
+		//-- Hafen API via Kimono --
+		System.out.println("Parsing Hafen API");
+		try {
+			//create json object from url
+			URL endpoint = new URL(Endpoints.hafen);
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+
+			//check if Hafen api call was successful
+			if (json.get("thisversionstatus").asString().equals("success")) {
+				//parse Hafen response
+				JsonArray json_events = json.get("results").asObject().get("collection1").asArray();
+
+				for (JsonValue value : json_events) {
+					addEvent.accept((event_factory.createHafenEvent(value.asObject())));
+				}
+			}
+			else {
+				System.out.println("API Error with Hafen call");
+				return;
+			}
+		}
+		catch (Exception e) {
+			if(DEBUG == 1) {e.printStackTrace();}
+			System.out.println("Exception: API Error with Hafen call");
 			return;
 		}
 

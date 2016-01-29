@@ -81,11 +81,46 @@ public class EventFactory {
 		//parse location (all events are at the Treibhaus, so hardcode it)
 		//latitude and longitude found here: http://www.sunny.at/main/remoteGetTips?id=9232
 		event.setStreet("Angerzellgasse 8");
-		event.setVenue("Innsbruck");
+		event.setVenue("6020 Innsbruck");
 		event.setLatitude((float) 47.2692124);
 		event.setLongitude((float) 11.4041024);
 
 		//return treibhaus event
+		return event;
+	}
+
+	// parse a jsonObject of the Hafen (provided by Kimono API)
+	public Event createHafenEvent(JsonObject json) {
+		Event event = new Event();
+		event.setApi("hafen");
+
+		//parse event name
+		//name is not a regular string, it looks like {"href":"http://www.hafen.cc/index.php/veranstaltungen/128-halbzeitfete/event_details","text":"Halbzeitfete"}
+		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
+		String s = json.get("name").asObject().toString();
+		String[] split = s.split(":");
+		String r = split[3];
+		r = r.replace("}", "");
+		r = r.replace("\"", "");
+		event.setName(r);
+
+		//parse event description
+		event.setDescription(json.get("description").asString());
+
+		//parse date and time
+		event.setStartTime(json.get("date").asString() + ", " + json.get("startTime").asString());
+
+		//parse not existing end time
+		event.setEndTime("");
+
+		//parse location (all events are at the Hafen, so hardcode it)
+		//latitude and longitude found here: http://mondeca.com/index.php/en/any-place-en
+		event.setStreet("Innrain 149");
+		event.setVenue("6020 Innsbruck");
+		event.setLatitude((float) 47.25605);
+		event.setLongitude((float) 11.37694);
+
+		//return hafen event
 		return event;
 	}
 }
