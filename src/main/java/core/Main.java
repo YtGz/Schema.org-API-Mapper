@@ -438,6 +438,34 @@ public class Main {
 			return;
 		}
 
+		//-- Weekender API via Kimono --
+		System.out.println("Parsing Weekender API");
+		try {
+			//create json object from url
+			URL endpoint = new URL(Endpoints.weekender);
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+
+			//check if Weekender api call was successful
+			if (json.get("thisversionstatus").asString().equals("success")) {
+				//parse Weekender response
+				JsonArray json_events = json.get("results").asObject().get("collection1").asArray();
+
+				for (JsonValue value : json_events) {
+					addEvent.accept((event_factory.createWeekenderEvent(value.asObject())));
+				}
+			}
+			else {
+				System.out.println("API Error with Weekender call");
+				return;
+			}
+		}
+		catch (Exception e) {
+			if(DEBUG == 1) {e.printStackTrace();}
+			System.out.println("Exception: API Error with Weekender call");
+			return;
+		}
+
 		//-- delete old database
 		Database.wipeEventDatabase();
 

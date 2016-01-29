@@ -108,6 +108,7 @@ public class EventFactory {
 		event.setDescription(json.get("description").asString());
 
 		//parse date and time
+		//you get date and time with different parameters, so concatenate them
 		event.setStartTime(json.get("date").asString() + ", " + json.get("startTime").asString());
 
 		//parse not existing end time
@@ -121,6 +122,41 @@ public class EventFactory {
 		event.setLongitude((float) 11.37694);
 
 		//return hafen event
+		return event;
+	}
+
+	// parse a jsonObject of the Weekender (provided by Kimono API)
+	public Event createWeekenderEvent(JsonObject json) {
+		Event event = new Event();
+		event.setApi("weekender");
+
+		//parse event name
+		//name is not a regular string, it looks like {"href":"http://www.weekender.at/index.php?day=05&month=12&year=2015","text":"CHAD VALLEY (UK)"}
+		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
+		String s = json.get("name").asObject().toString();
+		String[] split = s.split(":");
+		String r = split[3];
+		r = r.replace("}", "");
+		r = r.replace("\"", "");
+		event.setName(r);
+
+		//parse event description
+		event.setDescription(json.get("description").asString());
+
+		//parse date and time
+		event.setStartTime(json.get("startTime").asString());
+
+		//parse not existing end time
+		event.setEndTime("");
+
+		//parse location (all events are at the Treibhaus, so hardcode it)
+		//latitude and longitude found here: http://mondeca.com/index.php/en/any-place-en
+		event.setStreet("Tschamlerstraße 3");
+		event.setVenue("6020 Innsbruck");
+		event.setLatitude((float) 47.25782);
+		event.setLongitude((float) 11.39619);
+
+		//return treibhaus event
 		return event;
 	}
 }

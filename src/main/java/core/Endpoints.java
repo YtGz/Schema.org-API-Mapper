@@ -17,7 +17,7 @@ public class Endpoints {
 		"https://www.kimonolabs.com/api/66cddkci?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	public static final String hafen = 
 		"https://www.kimonolabs.com/api/7rqf2im8?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
-	// weekender api will only find events before 01.01.2017
+	// weekender api will only find events before 01.01.2017 and sometimes gets results only partial, not full (maybe too much like yelp?)
 	public static final String weekender = 
 		"https://www.kimonolabs.com/api/3svf6dz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	
