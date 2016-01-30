@@ -25,10 +25,15 @@ public class Endpoints {
 			"https://www.kimonolabs.com/api/a1vurhz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	
 	// restaurant apis
-	public static final String gutekueche = 
+	// gutekueche und lieferservice gibts auf kimono nicht mehr. Wurde vermutlich entfernt, weil yelp so viele Ergebnisse liefert?
+	// Stimme aber zu, yelp sollte uns eigentlich reichen und falls nicht, sind weitere Restaurants gleich ergänzt.
+	// daher nachfolgendes auskommentiert
+	/*public static final String gutekueche =
 		"https://www.kimonolabs.com/api/5pdrp9hy?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	public static final String lieferservice = 
-		"https://www.kimonolabs.com/api/bk436f42?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
+		"https://www.kimonolabs.com/api/bk436f42?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";*/
+
+
 	// i added yelp because tiroler-wirtshaus, urlauburlaub.at and lokaltipp provide less information and are way harder to scrape
 	// we get more than 500 restaurants form yelp, do we even need the other sides?
 	public static final String yelp = 
