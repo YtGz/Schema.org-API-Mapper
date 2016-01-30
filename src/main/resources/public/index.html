@@ -63,7 +63,7 @@
             </h5>
             <div id="map_{{$index}}" ng-class="{'map': true, 'map-show': result.showMap}"></div>
           </div>
-          <div>
+          <div ng-show="mode == 2">
             <h4>Range</h4>
             <div>
               <input class="nine columns" type="range" ng-model="rangeValue" min="1" max="100">
