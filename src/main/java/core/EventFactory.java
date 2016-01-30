@@ -7,6 +7,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.JsonArray;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -157,6 +158,62 @@ public class EventFactory {
 		event.setLongitude((float) 11.39619);
 
 		//return treibhaus event
+		return event;
+	}
+
+	// parse a jsonObject of the Events.at (provided by Kimono API)
+	public Event createEventsAtEvent(JsonObject json) {
+		Event event = new Event();
+		event.setApi("EventsAt");
+
+		//parse event name
+		//name is not a regular string, it looks like {"href":"https://www.events.at/e/simon-kostner-unvertraeglichkeiten-und-andere-haustiere#st-241521877","text":"Simon Kostner - Unverträglichkeiten und andere Haustiere"}
+		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
+		String s = json.get("name").asObject().toString();
+		String[] split = s.split(":");
+		String r = split[split.length-1];
+		r = r.replace("}", "");
+		r = r.replace("\"", "");
+		if (r == "") { r = "No name given"; }
+		event.setName(r);
+
+		//parse event description
+		event.setDescription(json.get("description").asString());
+
+		//parse date and time
+		//times are only displayed on the detail pages. So return a "<Date> - For detailed Starting/Ending Times, look at <URL>"
+		r = split[split.length-2];
+		r.replace("\",\"text", "");
+		r.replaceAll("\"", "");
+		r.replaceAll("text", "");
+		r.replaceAll(",", "");
+		r = "https:" + r;
+		try {
+			event.setStartTime(json.get("date").asString() + " - For detailed starting/ending time, click " + new URL(r)); // if r is not in here, you get no result on 3/4 of all searches, WTF !?
+		} catch (MalformedURLException e) { // design needs improvement ..!
+			e.printStackTrace();
+		}
+
+		//parse not existing end time
+		event.setEndTime("");
+
+		//Unfortionatly, you don't get the street on the index page
+		//here too you would have to switch to detail page ...
+		//we only get the location's name
+
+		//++++++++++++ TODO !!! ++++++++++++
+		// is there a possibility to get the address + geolocation via Google API only by location name?
+		// Please feel free to extend here if you can do so
+		/*event.setStreet("Angerzellgasse 8");
+		event.setVenue("6020 Innsbruck");
+		event.setLatitude((float) 47.2692124);
+		event.setLongitude((float) 11.4041024);*/
+		event.setStreet("Ingenieur-Etzel-Straße");
+		event.setVenue("6020 Innsbruck");
+		event.setLatitude((float) 47.2712546); // Coordinates & address from Congress Ibk temporary
+		event.setLongitude((float) 11.4011425);
+
+		//return events.at event
 		return event;
 	}
 }

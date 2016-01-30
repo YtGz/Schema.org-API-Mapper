@@ -20,6 +20,9 @@ public class Endpoints {
 	// weekender api will only find events before 01.01.2017 and sometimes gets results only partial, not full (maybe too much like yelp?)
 	public static final String weekender = 
 		"https://www.kimonolabs.com/api/3svf6dz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
+	// events.at only offers events until the end of the next month (12 pages)
+	public static final String eventsAt =
+			"https://www.kimonolabs.com/api/a1vurhz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	
 	// restaurant apis
 	public static final String gutekueche = 

@@ -466,6 +466,34 @@ public class Main {
 			return;
 		}
 
+		//-- Events.at API via Kimono --
+		System.out.println("Parsing Events.at API");
+		try {
+			//create json object from url
+			URL endpoint = new URL(Endpoints.eventsAt);
+			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
+			JsonObject json = Json.parse(endpoint_content).asObject();
+
+			//check if Weekender api call was successful
+			if (json.get("thisversionstatus").asString().equals("success")) {
+				//parse Events.at response
+				JsonArray json_events = json.get("results").asObject().get("collection1").asArray();
+
+				for (JsonValue value : json_events) {
+					addEvent.accept((event_factory.createEventsAtEvent(value.asObject())));
+				}
+			}
+			else {
+				System.out.println("API Error with Events.at call");
+				return;
+			}
+		}
+		catch (Exception e) {
+			if(DEBUG == 1) {e.printStackTrace();}
+			System.out.println("Exception: API Error with Events.at call");
+			return;
+		}
+
 		//-- delete old database
 		Database.wipeEventDatabase();
 
