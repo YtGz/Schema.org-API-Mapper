@@ -18,11 +18,11 @@ public class Endpoints {
 	public static final String hafen = 
 		"https://www.kimonolabs.com/api/7rqf2im8?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	// weekender api will only find events before 01.01.2017 and sometimes gets results only partial, not full (maybe too much like yelp?)
-	public static final String weekender = 
+	public static final String weekender =
 		"https://www.kimonolabs.com/api/3svf6dz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
 	// events.at only offers events until the end of the next month (12 pages)
-	public static final String eventsAt =
-			"https://www.kimonolabs.com/api/a1vurhz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";
+	/*public static final String eventsAt =
+			"https://www.kimonolabs.com/api/a1vurhz4?apikey=IlvCEiXaS7oojojyeLv58qCnTES0xwqR&authorization=h7RtvNgQnUeFQYKenRFBWL0MXJizJ55w";*/
 	
 	// restaurant apis
 	// gutekueche und lieferservice gibts auf kimono nicht mehr. Wurde vermutlich entfernt, weil yelp so viele Ergebnisse liefert?

@@ -49,6 +49,7 @@ public class Main {
 		//update restaurants every 5 days
 		long delay = 0;
 		if (Database.existsRestaurantDatabase()) {
+			if (DEBUG == 1) { System.out.println("Restaurant DB existiert - Ã¼berspringe YELP Parser ..."); }
 			// delay update if database exists already <- updating restaurants is super slow
 			delay = 5; 
 		}
@@ -468,14 +469,15 @@ public class Main {
 		}
 
 		//-- Events.at API via Kimono --
-		System.out.println("Parsing Events.at API");
+		// 2016-02-01: Martin: Results are very bad and also displayed very bad -> ignore events.at ...
+		/*System.out.println("Parsing Events.at API");
 		try {
 			//create json object from url
 			URL endpoint = new URL(Endpoints.eventsAt);
 			String endpoint_content = IOUtils.toString(endpoint, "UTF-8");
 			JsonObject json = Json.parse(endpoint_content).asObject();
 
-			//check if Weekender api call was successful
+			//check if events.at api call was successful
 			if (json.get("thisversionstatus").asString().equals("success")) {
 				//parse Events.at response
 				JsonArray json_events = json.get("results").asObject().get("collection1").asArray();
@@ -493,7 +495,7 @@ public class Main {
 			if(DEBUG == 1) {e.printStackTrace();}
 			System.out.println("Exception: API Error with Events.at call");
 			return;
-		}
+		}*/
 
 		//-- delete old database
 		Database.wipeEventDatabase();
@@ -523,7 +525,7 @@ public class Main {
 
 	//distance calculation based on the Haversine formula
 	static float computeDistance(Float x1, Float y1, Float x2, Float y2) {
-	  int R = 6378137; // Earth’s mean radius in meter
+	  int R = 6378137; // Earthï¿½s mean radius in meter
 	  double dLat = Math.toRadians(x2 - x1);
 	  double dLong = Math.toRadians(y2 - y1);
 	  double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
