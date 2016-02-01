@@ -52,7 +52,7 @@
               <img ng-src="{{result.image}}" stlye="border: 1px solid black;" width="80" height="80"/>
             </div>
             <h4>{{result.name}}</h4>
-            <h5 class="artist" ng-show="requestType == 1"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
+            <h5 class="artist" ng-show="requestType == 1 && result.artists.length"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
             <h5 class="date" ng-show="requestType == 1">{{result.startTime}}</h5>
             <h5 class="opening-hours" ng-show="requestType == 2">{{result.openingHours}}</h5>
             <h5 class="location"><span ng-show="requestType == 1">{{result.venue}}</span><span ng-show="requestType == 2">{{result.address}}</span>
