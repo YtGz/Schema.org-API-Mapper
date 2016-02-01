@@ -56,12 +56,17 @@ public class YelpParser {
 				// of the current restaurant is complete. this needs to be done here because we have to scroll thru the results until we get the
 				// row we are looking for
 				String price = "";
-				do{ 
-					helpString = json_restaurants_prices.get(priceIndex).asObject().get("price").asString();
-					if (!helpString.equals("Datenschutzerklärung")){
-						if (helpString.contains("€"))
-							price = helpString;
-						priceIndex++;
+				do{
+					try {
+						helpString = json_restaurants_prices.get(priceIndex).asObject().get("price").asString();
+						if (!helpString.equals("Datenschutzerklärung")) {
+							if (helpString.contains("€"))
+								price = helpString;
+							priceIndex++;
+						}
+					} catch (Exception e) {
+						System.out.println("Error parsing Yelp price. Price index: " + priceIndex + "Continue to next ...");
+						continue;
 					}
 				} while (!helpString.equals("Datenschutzerklärung"));
 				priceIndex++;
