@@ -54,7 +54,7 @@
             <h4>{{result.name}}</h4>
             <h5 class="artist" ng-show="requestType == 1 && result.artists.length"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
             <h5 class="date" ng-show="requestType == 1">{{result.startTime}}</h5>
-            <h5 class="opening-hours" ng-show="requestType == 2">{{result.openingHours}}</h5>
+            <h5 class="opening-hours" ng-show="false && requestType == 2">{{result.openingHours}}</h5>
             <h5 class="location"><span ng-show="requestType == 1">{{result.venue}}</span><span ng-show="requestType == 2">{{result.address}}</span>
               <div style="float:right">
                 <span ng-click="loadMap($index, result, null)" class="maps-icon" ng-show="mode == 1"></span>
@@ -79,7 +79,7 @@
             <h4>{{result.name}}</h4>
             <h5 class="artist" ng-show="requestType == 2"><span ng-repeat="a in result.artists">{{a.name}}<span ng-show="!$last">, </span></span></h5>
             <h5 class="date" ng-show="requestType == 2">{{result.startTime}}</h5>
-            <h5 class="opening-hours" ng-show="requestType == 1">{{result.openingHours}}</h5>
+            <h5 class="opening-hours" ng-show="false && requestType == 1">{{result.openingHours}}</h5>
             <h5 class="location"><span ng-show="requestType == 2">{{result.venue}}</span><span ng-show="requestType == 1">{{result.address}}</span></h5>
           </div>
         </div>
