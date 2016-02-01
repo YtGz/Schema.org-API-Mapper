@@ -162,7 +162,8 @@ public class EventFactory {
 	}
 
 	// parse a jsonObject of the Events.at (provided by Kimono API)
-	public Event createEventsAtEvent(JsonObject json) {
+	// 2016-02-01: Martin: Results are very bad and also displayed very bad -> ignore events.at ...
+	/*public Event createEventsAtEvent(JsonObject json) {
 		Event event = new Event();
 		event.setApi("EventsAt");
 
@@ -207,7 +208,7 @@ public class EventFactory {
 		/*event.setStreet("Angerzellgasse 8");
 		event.setVenue("6020 Innsbruck");
 		event.setLatitude((float) 47.2692124);
-		event.setLongitude((float) 11.4041024);*/
+		event.setLongitude((float) 11.4041024);
 		event.setStreet("Ingenieur-Etzel-Straße");
 		event.setVenue("6020 Innsbruck");
 		event.setLatitude((float) 47.2712546); // Coordinates & address from Congress Ibk temporary
@@ -215,5 +216,5 @@ public class EventFactory {
 
 		//return events.at event
 		return event;
-	}
+	}*/
 }
