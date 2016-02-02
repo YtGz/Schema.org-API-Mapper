@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.lang.Thread;
+import java.lang.StringBuilder;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,7 +31,7 @@ import core.Endpoints;
 import java.lang.Math;
 
 public class Main {
-	private static final Integer DEBUG = 1;
+	private static final Integer DEBUG = 0;
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
@@ -49,7 +50,6 @@ public class Main {
 		//update restaurants every 5 days
 		long delay = 0;
 		if (Database.existsRestaurantDatabase()) {
-			if (DEBUG == 1) { System.out.println("Restaurant DB existiert - überspringe YELP Parser ..."); }
 			// delay update if database exists already <- updating restaurants is super slow
 			delay = 5; 
 		}
@@ -62,6 +62,51 @@ public class Main {
 		//--- ROUTES
 
         get("/hello", (req, res) -> "https://www.youtube.com/watch?v=Am4oKAmc2To");
+
+		/* GET - our API endpoints
+			:type - either 'event' or 'restaurant' or 'all'
+
+			possible extensions not yet implemented
+			:filter - unused (may be used for 'artist' and 'location', etc.)
+			:filtertext - unused(text that should be filtered for the set filter)
+		*/
+		get("/API/:type", "application/json", (request, response) -> {
+			String type = request.params(":type");
+			StringBuilder sb = new StringBuilder("{\"status\": ");
+			String status = "\"success\"";
+			List<Event> events = new ArrayList<Event>();
+			List<Restaurant> restaurants = new ArrayList<Restaurant>();
+			ObjectMapper mapper = new ObjectMapper();
+
+			if (type.equals("all")) {
+				events = Database.getAllEvents();
+				restaurants = Database.getAllRestaurants();
+			}
+			else if (type.equals("event")) {
+				//could extend with filter options here
+				events = Database.getAllEvents();
+			}
+			else if (type.equals("restaurant")) {
+				//could extend with filter options here
+				restaurants = Database.getAllRestaurants();	
+			}
+			else {
+				status = "\"error\"";
+			}
+
+			sb.append(status + ", \"response\": {\"events\": ");
+			StringJoiner sj = new StringJoiner(",", "[", "]");
+			for (Event e : events) {
+				sj.add(mapper.writeValueAsString(e));
+			}
+			sb.append(sj.toString() + ", \"restaurants\": ");
+			sj = new StringJoiner(",", "[", "]");
+			for (Restaurant r : restaurants) {
+				sj.add(mapper.writeValueAsString(r));
+			}
+			sb.append(sj.toString() + "}");
+			return sb.toString();
+		});
 
 		/* POST - /find
 		 * returns all events/restaurants in the circumference of a specific restaurant/event
@@ -158,29 +203,6 @@ public class Main {
 
 			return sj.toString();
 		});
-
-        
-        /* Example webhook integrating with kimono */
-        post("/webhook", (req, res) -> {	//we specify 'ibkscraper.herokuapp.com/webhook' as the url to post to (in kimono)
-        	try {
-	        	ObjectMapper mapper = new ObjectMapper();
-	        	WebhookData newData = mapper.readValue(req.body(), WebhookData.class);
-	        	for(EventInfo elem : newData.getResults().getEventInfos()) {
-		        	if (!elem.validate()) {
-		                res.status(400);
-		                return "";
-		            }
-	        	}
-	        	for(EventInfo elem : newData.getResults().getEventInfos()) {
-	        		System.out.println(elem.getPrice());
-	        	}
-	        	return "OK";
-        	}
-        	catch (JsonParseException e) {
-	            res.status(400);
-	            return "";
-        	}
-        });
     }
 
     static int getHerokuAssignedPort() {
