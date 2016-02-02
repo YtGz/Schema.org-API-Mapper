@@ -81,6 +81,7 @@ public class Main {
 
 			//get the search radius (Default = 1.0)
 			Float radius = Float.parseFloat(request.getString("radius","1.0"));
+			radius *= 1000; //convert from km to m
 
 			//return events or restaurants depending on type/id and search radius
 			StringJoiner sj = new StringJoiner(",", "[", "]");
