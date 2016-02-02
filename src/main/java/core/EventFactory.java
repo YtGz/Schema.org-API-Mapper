@@ -68,7 +68,9 @@ public class EventFactory {
 		event.setApi("treibhaus");
 
 		//parse event name
-		event.setName(json.get("name").asString().replace("&amp;", "&"));
+		String name = json.get("name").asString().toLowerCase().replace("&amp;", "&");
+		name = capitalizeFirstLetterInString(name);
+		event.setName(name);
 
 		//parse event description
 		event.setDescription(json.get("description").asString());
@@ -110,11 +112,12 @@ public class EventFactory {
 		//parse event name
 		//name is not a regular string, it looks like {"href":"http://www.hafen.cc/index.php/veranstaltungen/128-halbzeitfete/event_details","text":"Halbzeitfete"}
 		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
-		String s = json.get("name").asObject().toString().replace("&amp;", "&");
+		String s = json.get("name").asObject().toString().toLowerCase().replace("&amp;", "&");
 		String[] split = s.split(":");
 		String r = split[3];
 		r = r.replace("}", "");
 		r = r.replace("\"", "");
+		r = capitalizeFirstLetterInString(r);
 		event.setName(r);
 
 		//parse event description
@@ -170,11 +173,13 @@ public class EventFactory {
 		//parse event name
 		//name is not a regular string, it looks like {"href":"http://www.weekender.at/index.php?day=05&month=12&year=2015","text":"CHAD VALLEY (UK)"}
 		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
-		String s = json.get("name").asObject().toString().replace("&amp;", "&");
+		String s = json.get("name").asObject().toString().toLowerCase().replace("&amp;", "&");
 		String[] split = s.split(":");
 		String r = split[3];
 		r = r.replace("}", "");
 		r = r.replace("\"", "");
+		r = capitalizeFirstLetterInString(r);
+		event.setName(r);
 		event.setName(r);
 
 		//parse event description
@@ -264,4 +269,17 @@ public class EventFactory {
 		//return events.at event
 		return event;
 	}*/
+
+	private String capitalizeFirstLetterInString(String s) {
+		StringBuffer buff = new StringBuffer();
+		String[] strArr = s.split(" ");
+
+		for (String str : strArr) {
+			char[] arr = str.trim().toCharArray();
+			arr[0] = Character.toUpperCase(arr[0]);
+			str = new String(arr);
+			buff.append(str).append (" ");
+		}
+		return buff.toString().trim();
+	}
 }
