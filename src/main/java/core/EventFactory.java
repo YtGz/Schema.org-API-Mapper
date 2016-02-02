@@ -21,7 +21,7 @@ public class EventFactory {
 		event.setApi("5gig");
 
 		//parse event name
-		event.setName(json.get("name").asString());
+		event.setName(json.get("name").asString().replace("&amp;", "&"));
 
 		//parse event description
 		event.setDescription(json.get("description").asString());
@@ -29,7 +29,7 @@ public class EventFactory {
 		//parse artists
 		JsonArray artists = json.get("artists").asArray();
 		for (JsonValue value : artists) {
-			event.addArtist(value.asObject().get("name").asString());
+			event.addArtist(value.asObject().get("name").asString().replace("&amp;", "&"));
 		}		
 
 		//get image
@@ -68,7 +68,7 @@ public class EventFactory {
 		event.setApi("treibhaus");
 
 		//parse event name
-		event.setName(json.get("name").asString());
+		event.setName(json.get("name").asString().replace("&amp;", "&"));
 
 		//parse event description
 		event.setDescription(json.get("description").asString());
@@ -110,7 +110,7 @@ public class EventFactory {
 		//parse event name
 		//name is not a regular string, it looks like {"href":"http://www.hafen.cc/index.php/veranstaltungen/128-halbzeitfete/event_details","text":"Halbzeitfete"}
 		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
-		String s = json.get("name").asObject().toString();
+		String s = json.get("name").asObject().toString().replace("&amp;", "&");
 		String[] split = s.split(":");
 		String r = split[3];
 		r = r.replace("}", "");
@@ -170,7 +170,7 @@ public class EventFactory {
 		//parse event name
 		//name is not a regular string, it looks like {"href":"http://www.weekender.at/index.php?day=05&month=12&year=2015","text":"CHAD VALLEY (UK)"}
 		//workaround: split the result by : into array of strings and replace unnecessary characters like } and 2 times " and return it afterwards
-		String s = json.get("name").asObject().toString();
+		String s = json.get("name").asObject().toString().replace("&amp;", "&");
 		String[] split = s.split(":");
 		String r = split[3];
 		r = r.replace("}", "");
