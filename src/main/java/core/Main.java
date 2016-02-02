@@ -104,7 +104,7 @@ public class Main {
 			for (Restaurant r : restaurants) {
 				sj.add(mapper.writeValueAsString(r));
 			}
-			sb.append(sj.toString() + "}");
+			sb.append(sj.toString() + "}}");
 			return sb.toString();
 		});
 
