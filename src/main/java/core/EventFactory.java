@@ -73,8 +73,20 @@ public class EventFactory {
 		//parse event description
 		event.setDescription(json.get("description").asString());
 
-		//parse date and time
-		event.setStartTime(json.get("date_time").asString());
+		//parse date and time to format DAY NAME | DATE | TIME
+		String t = json.get("date_time").asString();
+		String[] s = t.split(" ");
+		s[0] = s[0].replace("MO", "Monday");
+		s[0] = s[0].replace("DI", "Tuesday");
+		s[0] = s[0].replace("MI", "Wednesday");
+		s[0] = s[0].replace("DO", "Thursday");
+		s[0] = s[0].replace("FR", "Friday");
+		s[0] = s[0].replace("SA", "Saturday");
+		s[0] = s[0].replace("SO", "Sunday");
+		s[1] = s[1] + "2016";
+		String rt = s[0] + " | " + s[1] + " | " + s[s.length-2];
+		event.setStartTime(rt);
+		//event.setStartTime(json.get("date_time").asString()); // old version
 
 		//parse not existing end time
 		event.setEndTime("");
@@ -82,7 +94,7 @@ public class EventFactory {
 		//parse location (all events are at the Treibhaus, so hardcode it)
 		//latitude and longitude found here: http://www.sunny.at/main/remoteGetTips?id=9232
 		event.setStreet("Angerzellgasse 8");
-		event.setVenue("6020 Innsbruck");
+		event.setVenue("Treibhaus Innsbruck");
 		event.setLatitude((float) 47.2692124);
 		event.setLongitude((float) 11.4041024);
 
@@ -109,8 +121,32 @@ public class EventFactory {
 		event.setDescription(json.get("description").asString());
 
 		//parse date and time
-		//you get date and time with different parameters, so concatenate them
-		event.setStartTime(json.get("date").asString() + ", " + json.get("startTime").asString());
+		// Replace Month name by its value, to create the correct date/time output format
+		try {
+			String d = json.get("date").asString();
+			d = d.replace(" Jänner", "01.");
+			d = d.replace(" Januar", "01.");
+			d = d.replace(" Februar", "02.");
+			d = d.replace(" März", "03.");
+			d = d.replace(" April", "04.");
+			d = d.replace(" Mai", "05.");
+			d = d.replace(" Juni", "06.");
+			d = d.replace(" Juli", "07.");
+			d = d.replace(" August", "08.");
+			d = d.replace(" September", "09.");
+			d = d.replace(" Oktober", "10.");
+			d = d.replace(" November", "11.");
+			d = d.replace(" Dezember", "12.");
+			d = d.replace(" 2016", "2016"); // eleminate white space
+
+			SimpleDateFormat f1 = new SimpleDateFormat("d.MM.yyyy");
+			Date date = f1.parse(d);
+			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy");
+			event.setStartTime(f2.format(date) + " | " + json.get("startTime").asString());
+		} catch (ParseException e) {
+			event.setStartTime("invalid");
+		}
+		//event.setStartTime(json.get("date").asString() + ", " + json.get("startTime").asString());
 
 		//parse not existing end time
 		event.setEndTime("");
@@ -118,7 +154,7 @@ public class EventFactory {
 		//parse location (all events are at the Hafen, so hardcode it)
 		//latitude and longitude found here: http://mondeca.com/index.php/en/any-place-en
 		event.setStreet("Innrain 149");
-		event.setVenue("6020 Innsbruck");
+		event.setVenue("Hafen");
 		event.setLatitude((float) 47.25605);
 		event.setLongitude((float) 11.37694);
 
@@ -145,19 +181,30 @@ public class EventFactory {
 		event.setDescription(json.get("description").asString());
 
 		//parse date and time
-		event.setStartTime(json.get("startTime").asString());
+		String w = json.get("startTime").asString();
+		w = w.replace("Einlass", "");
+		w = w.replace("Uhr", "");
+		try {
+			SimpleDateFormat f1 = new SimpleDateFormat("dd.MM.yyyy, hh:mm");
+			Date date = f1.parse(w);
+			SimpleDateFormat f2 = new SimpleDateFormat("EEEE | dd.MM.yyyy | HH:mm");
+			event.setStartTime(f2.format(date));
+		} catch (ParseException e) {
+			event.setStartTime("invalid");
+		}
+		//event.setStartTime(json.get("startTime").asString());
 
 		//parse not existing end time
 		event.setEndTime("");
 
-		//parse location (all events are at the Treibhaus, so hardcode it)
+		//parse location (all events are at the Weekender Club, so hardcode it)
 		//latitude and longitude found here: http://mondeca.com/index.php/en/any-place-en
 		event.setStreet("Tschamlerstraße 3");
-		event.setVenue("6020 Innsbruck");
+		event.setVenue("Weekender Club");
 		event.setLatitude((float) 47.25782);
 		event.setLongitude((float) 11.39619);
 
-		//return treibhaus event
+		//return weekender event
 		return event;
 	}
 
