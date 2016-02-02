@@ -270,6 +270,12 @@ public class EventFactory {
 		return event;
 	}*/
 
+	/**
+	 * Sets the first letter of a string to a capital letter.
+	 * See: https://stackoverflow.com/questions/1149855/how-to-upper-case-every-first-letter-of-word-in-a-string
+	 * @param s	The given string to "update"
+	 * @return the upadtedgit  string
+     */
 	private String capitalizeFirstLetterInString(String s) {
 		StringBuffer buff = new StringBuffer();
 		String[] strArr = s.split(" ");
