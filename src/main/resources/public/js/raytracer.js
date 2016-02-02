@@ -4,7 +4,7 @@ angular.module('Raytracer', [])
     $scope.loading = false;
     $scope.requestType = 1;
     $scope.mode = 1;
-    $scope.rangeValue = 10;
+    $scope.rangeValue = 3;
     $scope.currentResult = -1;
 
     //search option
