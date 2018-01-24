@@ -1,0 +1,174 @@
+{
+"@context": "http://schema.org/",
+"@type": "SearchAction"
+
+"object": {
+	"@type": "Event",
+	"identifier-input": "required",
+	"keywords-input": "optional",
+	"location-input": "optional",
+	"date-input": "optional",
+	"category-input": "optional",
+	"ex_category-input": "optional",
+	"sort_order-input": "optional",
+	"sort_direction-input": "optional"
+},
+
+"result": {
+	"@type": ["ItemList", "Event"],
+	"numberOfItems": "18",
+	"ItemListElement": [
+	{
+		"@type": "ListItem",
+		"position": 1,
+		"item": {
+			"@type": "Text",
+			"name": "id"
+		}
+	},
+	{
+		"@type": "ListItem",
+		"position": 2,
+		"item": {
+			"@type": "URL",
+			"name": "url"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 3,
+		"item": {
+			"@type": "Text",
+			"name": "title"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 4,
+		"item": {
+			"@type": "Text",
+			"name": "description"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 5,
+		"item": {
+			"@type": "DateTime",
+			"name": "start_time"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 6,
+		"item": {
+			"@type": "DateTime",
+			"name": "stop_time"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 7,
+		"item": {
+			"@type": "Text",
+			"name": "venue_id"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 8,
+		"item": {
+			"@type": "URL",
+			"name": "venue_url"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 9,
+		"item": {
+			"@type": "Text",
+			"name": "venue_name"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 10,
+		"item": {
+			"@type": "PostalAddress",
+			"name": "venue_address"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 11,
+		"item": {
+			"@type": "Text",
+			"name": "city_name"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 12,
+		"item": {
+			"@type": "Text",
+			"name": "region_name"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 13,
+		"item": {
+			"@type": "Text",
+			"name": "region_abbr"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 14,
+		"item": {
+			"@type": "PostalAddress",
+			"name": "postal_code"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 15,
+		"item": {
+			"@type": "Text",
+			"name": "country_name"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 16,
+		"item": {
+			"@type": "Number",
+			"name": "latitude"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 17,
+		"item": {
+			"@type": "Number",
+			"name": "longitude"
+		}	
+	},
+	{
+		"@type": "ListItem",
+		"position": 18,
+		"item": {
+			"@type": "Text",
+			"name": "geocode_type"
+		}	
+	},
+	]
+},
+
+"target": {
+	"@type": "EntryPoint",
+	"urlTemplate": "http://localhost:4567/events/search",
+	"httpMethod": "POST"
+}
+}
+

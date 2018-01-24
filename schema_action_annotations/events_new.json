@@ -1,0 +1,32 @@
+{
+"@context": "http://schema.org/",
+"@type": "AddAction",
+
+"agent": {
+	"@type": "Event",
+	"identifier-input": "required",
+	"title-input": "required",
+	"start_time-input": "required",
+	"stop_time-input": "optional",
+	"tz_olson_path-input": "optional",
+	"all_day-input": "optional",
+	"description-input": "optional",
+	"privacy-input": "optional",
+	"tags-input": "optional",
+	"free-input": "optional",
+	"price-input": "optional",
+	"venue_id-input": "required",
+	"parent_id-input": "optional"
+},
+
+"result": {
+	"@type": "Text",
+	"id-output": "required"
+},
+
+"target": {
+	"@type": "EntryPoint",
+	"urlTemplate": "http://localhost:4567/events/new",
+	"httpMethod": "POST"
+}
+}

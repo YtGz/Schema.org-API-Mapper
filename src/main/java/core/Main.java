@@ -26,6 +26,76 @@ public class Main {
     		}
     	});
     	
+    	
+    	
+    	post("/events/search", (req, res) -> {
+    		//parse the JSON from the request
+    		Any request = JsonIterator.deserialize(req.body());
+    		String api_key = request.get("instrument").get("identifier").toString();
+    		String keywords = request.get("object").get("query").toString();
+    		String location = request.get("object").get("location").toString();
+    		String date = request.get("attributes").get("Text").toString();
+    		String category = request.get("attributes").get("identifier").toString();
+    		String ex_category = request.get("attributes").get("identifier").toString();
+    		String sort_order = request.get("attributes").get("Text").toString();
+    		
+    		// note: sort_direction missing
+    		
+    		//call the eventful API endpoint
+    		URL url = new URL("http://api.eventful.com/json/events/search?app_key=" + api_key + "&keywords=" + keywords + "&location=" + location + "&date" + date + "&category" + category + "&ex_category" + ex_category + "&sort_order" + sort_order);
+    		URLConnection urlConnection = url.openConnection();
+    		String responseString;
+    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
+    		    responseString = reader.lines().collect(Collectors.joining("\n"));
+    		}
+    		Any response = JsonIterator.deserialize(responseString);
+    		
+    		//process the response of the eventful API call
+    		if(response.get("error").toString().equalsIgnoreCase("1")) {
+    			halt("API call not successful!");
+    		}
+    		res.type("application/json"); 
+    		// TODO: include further list elements (now only first is added - needs to be tested fist)
+    		// TODO: resout variables
+    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": \"@type\": [\"ItemList\", \"Event\"], \"ItemListElement\": [{\"@type\": \"ListItem\", \"item\": {\"@type\": \"Text\", \"name\": \"id\"}]}";
+    	});
+    	
+    	post("/events/new", (req, res) -> {
+    		//parse the JSON from the request
+    		Any request = JsonIterator.deserialize(req.body());
+    		String api_key = request.get("instrument").get("identifier").toString();
+    		String event_title = request.get("object").get("name").toString();
+    		String start_time = request.get("object").get("startDate").toString();
+    		String stop_time = request.get("object").get("endDate").toString();
+    		String description = request.get("description").get("Text").toString();
+    		String parent_id = request.get("object").get("identifier").toString();
+    		String venue_id = request.get("details").get("identifier").toString();
+    		String price = request.get("referendce").get("price").toString();
+    		
+    		// note: tz-olson-pathc and all-day not included, also privacy, tags, free
+    		
+    		//call the eventful API endpoint
+    		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&price=" + price + "&venue_id=" + venue_id + "&parent_id=" + parent_id);
+    		URLConnection urlConnection = url.openConnection();
+    		String responseString;
+    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
+    		    responseString = reader.lines().collect(Collectors.joining("\n"));
+    		}
+    		Any response = JsonIterator.deserialize(responseString);
+    		
+    		//process the response of the eventful API call
+    		if(!response.get("status").toString().equalsIgnoreCase("ok")) {
+    			halt("API call not successful!");
+    		}
+    		
+    		String output = response.get("id").toString();
+    		
+    		res.type("application/json"); 
+			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\", \"result\": {\"@type\": \"Text\", \"id-output\": "+output+"}}";
+    	});
+    	
+    	
+    	
     	post("/events/categories/add", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
