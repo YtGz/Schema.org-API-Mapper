@@ -1,67 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.raytracer.app</groupId>
-  <artifactId>scraper</artifactId>
+  <groupId>com.semanticweb.app</groupId>
+  <artifactId>schema-eventful-wrapper</artifactId>
   <version>1.0</version>
-  <name>scraper</name>
- 
-  <repositories>
-    <repository>
-      <id>objectdb</id>
-      <name>ObjectDB Repository</name>
-      <url>http://m2.objectdb.com</url>
-    </repository>
-  </repositories>
+  <name>schema-eventful-wrapper</name>
 
   <dependencies>
-	
-		<dependency>
-			<groupId>com.objectdb</groupId>
-			<artifactId>objectdb</artifactId>
-			<version>2.6.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.transaction</groupId>
-			<artifactId>jta</artifactId>
-			<version>1.1</version>
-		</dependency>
-
     <dependency>
         <groupId>com.sparkjava</groupId>
         <artifactId>spark-core</artifactId>
         <version>2.3</version>
     </dependency>
-    <dependency>
-    	<groupId>com.fasterxml.jackson.core</groupId>
-    	<artifactId>jackson-core</artifactId>
-    	<version>2.5.1</version>
- 	</dependency>
- 	<dependency>
-    	<groupId>com.fasterxml.jackson.core</groupId>
-    	<artifactId>jackson-databind</artifactId>
-    	<version>2.5.1</version>
-  	</dependency>
-  	<dependency>
-    	<groupId>org.projectlombok</groupId>
-    	<artifactId>lombok</artifactId>
-    	<version>1.16.2</version>
-    	<scope>provided</scope>
-  	</dependency>
-	<dependency>
-		<groupId>commons-io</groupId>
-		<artifactId>commons-io</artifactId>
-		<version>2.4</version>
-	</dependency>
-	<dependency>
-	  <groupId>com.eclipsesource.minimal-json</groupId>
-	  <artifactId>minimal-json</artifactId>
-	  <version>0.9.4</version>
-	</dependency>
   </dependencies>
 
   <build>
@@ -95,19 +44,6 @@
                           <mainClass>core.Main</mainClass>
                       </manifest>
                   </archive>
-              </configuration>
-          </plugin>
-          <plugin>
-              <groupId>com.heroku.sdk</groupId>
-              <artifactId>heroku-maven-plugin</artifactId>
-              <version>0.5.4</version>
-              <configuration>
-                  <jdkVersion>1.8</jdkVersion>
-                  <appName>ibkscraper</appName>
-                  <processTypes>
-                      <!-- Tell Heroku how to launch your application -->
-                      <web>java -jar ./target/scraper-1.0-jar-with-dependencies.jar</web>
-                  </processTypes>
               </configuration>
           </plugin>
       </plugins>
