@@ -14,8 +14,6 @@
 		"identifier-input": "required"
 	},
 	
-	"actionStatus-output": "",
-	
 	"instrument": {
 		"@type": "Thing",
 		"identifier-input": "required"
