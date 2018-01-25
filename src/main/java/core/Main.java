@@ -31,18 +31,27 @@ public class Main {
     	post("/events/search", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
-    		String api_key = request.get("instrument").get("identifier").toString();
-    		String keywords = request.get("object").get("query").toString();
+    		String keywords = request.get("query").toString();
     		String location = request.get("object").get("location").toString();
-    		String date = request.get("attributes").get("Text").toString();
-    		String category = request.get("attributes").get("identifier").toString();
-    		String ex_category = request.get("attributes").get("identifier").toString();
-    		String sort_order = request.get("attributes").get("Text").toString();
-    		
-    		// note: sort_direction missing
+    		String date = request.get("object").get("startDate").toString();
+    		String category = request.get("object").get("about").toString();
+    		String api_key = null;
+    		String ex_category = null;
+    		for(Any instrument : request.get("instrument").get("itemListElement")) {
+    			switch(instrument.get("name").toString()) {
+    				case "api-key":
+    					api_key = instrument.get("identifier").toString();
+    					break;
+    				case "excluded_categories":
+    					ex_category = instrument.get("identifier").toString();
+    					break;
+    			}
+    		}
+    		String sort_order = request.get("result").get("itemListOrder").get(0).toString();
+    		String sort_direction = request.get("result").get("itemListOrder").get(1).toString();		
     		
     		//call the eventful API endpoint
-    		URL url = new URL("http://api.eventful.com/json/events/search?app_key=" + api_key + "&keywords=" + keywords + "&location=" + location + "&date" + date + "&category" + category + "&ex_category" + ex_category + "&sort_order" + sort_order);
+    		URL url = new URL("http://api.eventful.com/json/events/search?app_key=" + api_key + "&keywords=" + keywords + "&location=" + location + "&date=" + date + "&category=" + category + "&ex_category=" + ex_category + "&sort_order=" + sort_order + "&sort_direction=" + sort_direction);
     		URLConnection urlConnection = url.openConnection();
     		String responseString;
     		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
@@ -57,7 +66,8 @@ public class Main {
     		res.type("application/json"); 
     		// TODO: include further list elements (now only first is added - needs to be tested fist)
     		// TODO: resout variables
-    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": \"@type\": [\"ItemList\", \"Event\"], \"ItemListElement\": [{\"@type\": \"ListItem\", \"item\": {\"@type\": \"Text\", \"name\": \"id\"}]}";
+    		System.out.println(response.get("events").get(0).toString());
+    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("events").get(0).get("id").toString() + "\"]}}";
     	});
     	
     	post("/events/new", (req, res) -> {

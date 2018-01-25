@@ -11,11 +11,13 @@
 	"targetCollection":
 	{
 		"@type": "Thing",
+		"name": "category_id",
 		"identifier-input": "required"
 	},
 	
 	"instrument": {
 		"@type": "Thing",
+		"name": "api-key",
 		"identifier-input": "required"
 	},
 
