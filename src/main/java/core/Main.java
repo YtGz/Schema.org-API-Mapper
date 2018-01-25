@@ -63,9 +63,8 @@ public class Main {
     		if(response.get("error").toString().equalsIgnoreCase("1")) {
     			halt("API call not successful!");
     		}
+    		// TODO: response json
     		res.type("application/json"); 
-    		// TODO: include further list elements (now only first is added - needs to be tested fist)
-    		// TODO: resout variables
     		System.out.println(response.get("events").get(0).toString());
     		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("events").get(0).get("id").toString() + "\"]}}";
     	});
@@ -73,16 +72,22 @@ public class Main {
     	post("/events/new", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
-    		String api_key = request.get("instrument").get("identifier").toString();
     		String event_title = request.get("object").get("name").toString();
     		String start_time = request.get("object").get("startDate").toString();
     		String stop_time = request.get("object").get("endDate").toString();
-    		String description = request.get("description").get("Text").toString();
-    		String parent_id = request.get("object").get("identifier").toString();
-    		String venue_id = request.get("details").get("identifier").toString();
-    		String price = request.get("referendce").get("price").toString();
+    		String description = request.get("description").get("description").toString();
+    		String free = request.get("object").get("isAccessibleForFree").toString();
+    		for(Any instrument : request.get("instrument").get("itemListElement")) {
+    			switch(instrument.get("name").toString()) {
+    				case "api-key":
+    					api_key = instrument.get("identifier").toString();
+    					break;
+    				case "event_venue":
+    					event_venue = instrument.get("identifier").toString();
+    					break;
+    			}
+    		}
     		
-    		// note: tz-olson-pathc and all-day not included, also privacy, tags, free
     		
     		//call the eventful API endpoint
     		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&price=" + price + "&venue_id=" + venue_id + "&parent_id=" + parent_id);
@@ -98,10 +103,9 @@ public class Main {
     			halt("API call not successful!");
     		}
     		
-    		String output = response.get("id").toString();
-    		
     		res.type("application/json"); 
-			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\", \"result\": {\"@type\": \"Text\", \"id-output\": "+output+"}}";
+    		String res_eventid = response.get("id").toString();
+			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\", \"result\": {\"@type\": \"Text\", \"id-output\": "+res_eventid+"}}";
     	});
     	
     	

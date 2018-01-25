@@ -2,26 +2,39 @@
 "@context": "http://schema.org/",
 "@type": "AddAction",
 
-"agent": {
+"object": {
 	"@type": "Event",
-	"identifier-input": "required",
-	"title-input": "required",
-	"start_time-input": "required",
-	"stop_time-input": "optional",
-	"tz_olson_path-input": "optional",
-	"all_day-input": "optional",
+	"name-input": "required",
+	"startDate-input": "required",
+	"endDate-input": "optional",
 	"description-input": "optional",
-	"privacy-input": "optional",
-	"tags-input": "optional",
-	"free-input": "optional",
-	"price-input": "optional",
-	"venue_id-input": "required",
+	"isAccessibleForFree-input": "optional",
 	"parent_id-input": "optional"
 },
 
+"instrument": 
+	{
+		"@type": "ItemList",
+		"numberOfItems": "2",
+		"itemListElement": 
+		[
+			{
+				"@type": "Thing",
+				"name": "api-key",
+				"identifier-input": "required"
+			},
+
+			{
+				"@type": "EventVenue",
+				"name": "venue_id",
+				"identifier-input": "required"
+			}
+		]
+	},
+
 "result": {
-	"@type": "Text",
-	"id-output": "required"
+	"@type": "Event",
+	"identifier-output": "required"
 },
 
 "target": {
