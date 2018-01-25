@@ -27,7 +27,7 @@ public class Main {
     	});
     	
     	
-    	
+    	/*------------------------------------------ search event ------------------------------------------*/
     	post("/events/search", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
@@ -69,6 +69,7 @@ public class Main {
     		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("events").get(0).get("id").toString() + "\"]}}";
     	});
     	
+    	/*------------------------------------------ add new event ------------------------------------------*/
     	post("/events/new", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
@@ -88,7 +89,6 @@ public class Main {
     			}
     		}
     		
-    		
     		//call the eventful API endpoint
     		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&free=" + free + "&venue_id=" + venue_id);
     		URLConnection urlConnection = url.openConnection();
@@ -105,11 +105,10 @@ public class Main {
     		
     		res.type("application/json"); 
     		String res_eventid = response.get("id").toString();
-			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\", \"result\": {\"@type\": \"Text\", \"id-output\": "+res_eventid+"}}";
+			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\", \"result\": {\"@type\": \"Event\", \"id-output\": "+res_eventid+"}}";
     	});
     	
-    	
-    	
+    	/*------------------------------------------ add categories ------------------------------------------*/
     	post("/events/categories/add", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
@@ -133,9 +132,8 @@ public class Main {
     		res.type("application/json"); 
 			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\"}";
     	});
-    	
-    	
-    	
+
+    	/*------------------------------------------ add performers ------------------------------------------*/
     	post("/events/performers/add", (req, res) -> {
     		//parse the JSON from the request
     		Any request = JsonIterator.deserialize(req.body());
@@ -159,5 +157,63 @@ public class Main {
     		res.type("application/json"); 
 			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\"}";
     	});
+    	
+    	/*------------------------------------------ add event properties ------------------------------------------*/
+    	post("/events/properties/add", (req, res) -> {
+    		//parse the JSON from the request
+    		Any request = JsonIterator.deserialize(req.body());
+    		String api_key = request.get("instrument").get("identifier").toString();
+    		String event_id = request.get("object").get("identifier").toString();
+    		String property_id = request.get("targetCollection").get("identifier").toString();
+    		String property_name = request.get("targetCollection").get("name").toString();
+    		String property_value = request.get("targetCollection").get("value").toString();
+    		
+    		//call the eventful API endpoint
+    		URL url = new URL("http://api.eventful.com/json/events/properties/add?app_key=" + api_key + "&id=" + event_id + "&name=" + property_name + "&value=" + property_value);
+    		URLConnection urlConnection = url.openConnection();
+    		String responseString;
+    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
+    		    responseString = reader.lines().collect(Collectors.joining("\n"));
+    		}
+    		Any response = JsonIterator.deserialize(responseString);
+    		
+    		//process the response of the eventful API call
+    		if(!response.get("status").toString().equalsIgnoreCase("ok")) {
+    			halt("API call not successful!");
+    		}
+    		res.type("application/json");
+    		String res_propertyid = response.get("property_id").toString();
+			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\", \"result\": {\"@type\": \"PropertyValue\", \"id-output\": "+res_propertyid+"}}";
+    	});
+    	
+    	/*------------------------------------------ list properties ------------------------------------------*/
+    	post("/events/properties/list", (req, res) -> {
+    		//parse the JSON from the request
+    		Any request = JsonIterator.deserialize(req.body());
+    		String api_key = request.get("instrument").get("identifier").toString();
+    		String event_id = request.get("object").get("identifier").toString();
+    		
+    		//call the eventful API endpoint
+    		URL url = new URL("http://api.eventful.com/json/events/properties/list?app_key=" + api_key + "&id=" + event_id);
+    		URLConnection urlConnection = url.openConnection();
+    		String responseString;
+    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
+    		    responseString = reader.lines().collect(Collectors.joining("\n"));
+    		}
+    		Any response = JsonIterator.deserialize(responseString);
+    		
+    		//process the response of the eventful API call
+    		if(response.get("error").toString().equalsIgnoreCase("1")) {
+    			halt("API call not successful!");
+    		}
+    		res.type("application/json");
+
+    		System.out.println(response.get("properties").get(0).toString());
+    		System.out.println(response.get("properties").get(1).toString());
+    		System.out.println(response.get("properties").get(2).toString());
+    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("properties").get(0).get("id").toString() + "\, \"ItemListElement\": [\"" + response.get("properties").get(1).get("name").toString() + "\, \"ItemListElement\": [\"" + response.get("properties").get(2).get("value").toString() + "\"]}}";
+    	});
+    	
+    	
     }
 }

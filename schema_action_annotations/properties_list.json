@@ -1,0 +1,79 @@
+{
+	"@context": "http://schema.org/",
+	"@type": "SearchAction",
+	
+	"object": 
+	{
+		"@type": "Event",
+		"identifier-input": "required"
+	},
+	
+	"instrument":
+	{
+		"@type": "Thing",
+		"name": "api-key",
+		"identifier-input": "required"
+	},
+	
+	"result":
+	{
+		"@type": 
+		[
+			"ItemList"
+		],
+		"itemListOrder-input": 
+		[
+			{
+				"@type": "ItemListOrderType",
+				"name": "order_direction",
+				"valueRequired": false
+			},
+
+			{
+				"@type": "Text",
+				"name": "order_by",
+				"valueRequired": false
+			}
+		],
+		"numberOfItems": "3",
+		"itemListElement-output": 
+		[
+			{
+				"@type": "ListItem",
+				"position": 1,
+				"item": 
+				{
+					"@type": "PropertyValue",
+					"identifier-output": "required"
+				}
+			},
+
+			{
+				"@type": "ListItem",
+				"position": 2,
+				"item": 
+				{
+					"@type": "PropertyValue",
+					"name-output": "required"
+				}
+			},
+
+			{
+				"@type": "ListItem",
+				"position": 3,
+				"item": 
+				{
+					"@type": "PropertyValue",
+					"value-output": "required"
+				}
+			}
+		]
+	},
+	
+	"target": 
+	{
+		"@type": "EntryPoint",
+		"urlTemplate": "http://localhost:4567/events/properties/list",
+		"httpMethod": "POST"
+	}
+}

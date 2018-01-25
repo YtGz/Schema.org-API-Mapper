@@ -10,8 +10,10 @@
 
 	"targetCollection":
 	{
-		"@type": "Person",
-		"identifier-input": "required"
+		"@type": "PropertyValue",
+		"identifier-input": "required",
+		"name-input": "required",
+		"value-input": "required"
 	},
 	
 	"instrument": {
@@ -19,11 +21,16 @@
 		"name": "api-key",
 		"identifier-input": "required"
 	},
+	
+	"result": {
+		"@type": "PropertyValue",
+		"identifier-output": "required"
+	},
 
 	"target": 
 	{
 		"@type": "EntryPoint",
-		"urlTemplate": "http://localhost:4567/events/performers/add",
+		"urlTemplate": "http://localhost:4567/events/properties/add",
 		"httpMethod": "POST"
 	}
 }
