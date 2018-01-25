@@ -90,7 +90,7 @@ public class Main {
     		
     		
     		//call the eventful API endpoint
-    		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&price=" + price + "&venue_id=" + venue_id + "&parent_id=" + parent_id);
+    		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&free=" + free + "&venue_id=" + venue_id);
     		URLConnection urlConnection = url.openConnection();
     		String responseString;
     		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
@@ -119,6 +119,32 @@ public class Main {
     		
     		//call the eventful API endpoint
     		URL url = new URL("http://api.eventful.com/json/events/categories/add?app_key=" + api_key + "&id=" + event_id + "&category_id=" + category_id);
+    		URLConnection urlConnection = url.openConnection();
+    		String responseString;
+    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
+    		    responseString = reader.lines().collect(Collectors.joining("\n"));
+    		}
+    		Any response = JsonIterator.deserialize(responseString);
+    		
+    		//process the response of the eventful API call
+    		if(!response.get("status").toString().equalsIgnoreCase("ok")) {
+    			halt("API call not successful!");
+    		}
+    		res.type("application/json"); 
+			return "{\"@context\": \"http://schema.org/\",\"@type\": \"AddAction\",\"actionStatus\": \"CompletedActionStatus\"}";
+    	});
+    	
+    	
+    	
+    	post("/events/performers/add", (req, res) -> {
+    		//parse the JSON from the request
+    		Any request = JsonIterator.deserialize(req.body());
+    		String api_key = request.get("instrument").get("identifier").toString();
+    		String event_id = request.get("object").get("identifier").toString();
+    		String performers_id = request.get("targetCollection").get("identifier").toString();
+    		
+    		//call the eventful API endpoint
+    		URL url = new URL("http://api.eventful.com/json/events/performers/add?app_key=" + api_key + "&id=" + event_id + "&category_id=" + performers_id);
     		URLConnection urlConnection = url.openConnection();
     		String responseString;
     		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {

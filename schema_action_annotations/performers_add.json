@@ -1,0 +1,29 @@
+{
+	"@context": "http://schema.org/",
+	"@type": "AddAction",
+	
+	"object": 
+	{
+		"@type": "Event",
+		"identifier-input": "required"
+	},
+
+	"targetCollection":
+	{
+		"@type": "Person",
+		"identifier-input": "required"
+	},
+	
+	"instrument": {
+		"@type": "Thing",
+		"name": "api-key",
+		"identifier-input": "required"
+	},
+
+	"target": 
+	{
+		"@type": "EntryPoint",
+		"urlTemplate": "http://localhost:4567/events/categories/add",
+		"httpMethod": "POST"
+	}
+}
