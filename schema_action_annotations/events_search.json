@@ -53,7 +53,7 @@
 		],
 		"numberOfItems": "18",
 		"itemListElement-output": 
-		[
+		[[
 			{
 				"@type": "ListItem",
 				"position": 1,
@@ -233,7 +233,7 @@
 					"name": "geocode_type"
 				}
 			}
-		]
+		]]
 	},
 
 	"target": 
