@@ -65,8 +65,14 @@ public class Main {
     		}
     		// TODO: response json
     		res.type("application/json"); 
-    		System.out.println(response.get("events").get(0).toString());
-    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("events").get(0).get("id").toString() + "\"]}}";
+    		//System.out.println(response.get("events").get("event").get(0).toString());
+    		String result = "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [";
+    		for(Any event : response.get("events").get("event")) {
+    			System.out.println(event.toString());
+    			result += "{\"id\": \"" + event.get("id").toString() + "\"},";
+    		}
+    		result = result.substring(0, result.length()-1); //remove the last comma
+    		return result + "]}}";
     	});
     	
     	/*------------------------------------------ add new event ------------------------------------------*/
@@ -78,6 +84,8 @@ public class Main {
     		String stop_time = request.get("object").get("endDate").toString();
     		String description = request.get("description").get("description").toString();
     		String free = request.get("object").get("isAccessibleForFree").toString();
+    		String api_key = null;
+    		String event_venue = null;
     		for(Any instrument : request.get("instrument").get("itemListElement")) {
     			switch(instrument.get("name").toString()) {
     				case "api-key":
@@ -90,7 +98,7 @@ public class Main {
     		}
     		
     		//call the eventful API endpoint
-    		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&free=" + free + "&venue_id=" + venue_id);
+    		URL url = new URL("http://api.eventful.com/json/events/new?app_key=" + api_key + "&title=" + event_title + "&start_time=" + start_time + "&stop_time=" + stop_time + "&description=" + description + "&free=" + free + "&venue_id=" + event_venue);
     		URLConnection urlConnection = url.openConnection();
     		String responseString;
     		try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
@@ -211,7 +219,7 @@ public class Main {
     		System.out.println(response.get("properties").get(0).toString());
     		System.out.println(response.get("properties").get(1).toString());
     		System.out.println(response.get("properties").get(2).toString());
-    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("properties").get(0).get("id").toString() + "\, \"ItemListElement\": [\"" + response.get("properties").get(1).get("name").toString() + "\, \"ItemListElement\": [\"" + response.get("properties").get(2).get("value").toString() + "\"]}}";
+    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("properties").get(0).get("id").toString() + ", \"ItemListElement\": [\"" + response.get("properties").get(1).get("name").toString() + ", \"ItemListElement\": [\"" + response.get("properties").get(2).get("value").toString() + "\"]}}";
     	});
     	
     	
