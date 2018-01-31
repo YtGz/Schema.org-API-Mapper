@@ -235,10 +235,10 @@ public class Main {
     		}
     		res.type("application/json");
 
-    		System.out.println(response.get("properties").get(0).toString());
-    		System.out.println(response.get("properties").get(1).toString());
-    		System.out.println(response.get("properties").get(2).toString());
-    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + response.get("properties").get(0).get("id").toString() + ", \"ItemListElement\": [\"" + response.get("properties").get(1).get("name").toString() + ", \"ItemListElement\": [\"" + response.get("properties").get(2).get("value").toString() + "\"]}}";
+    		String property_id = response.get("properties").get(0).get("id").toString();
+    		String property_name = response.get("properties").get(1).get("name").toString();
+    		String property_value = response.get("properties").get(2).get("value").toString()
+    		return "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [\"" + property_id + ", \"ItemListElement\": [\"" + property_name + ", \"ItemListElement\": [\"" + property_value + "\"]}}";
     	});
     	
     	
