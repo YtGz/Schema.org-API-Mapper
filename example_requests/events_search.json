@@ -1,0 +1,31 @@
+{
+	"query": "music",
+	"instrument": 
+	{
+		"@type": "ItemList",
+		"numberOfItems": "2",
+		"itemListElement": 
+		[
+			{
+				"@type": "Thing",
+				"name": "api-key",
+				"identifier": "fMdHPD36ZWbzh2BQ"
+			},
+
+			{
+				"@type": "Thing",
+				"name": "excluded_categories",
+				"description": "Exclude search results from including this category ID. A list of categories may be specified separated by commas."
+			}
+		]
+	},
+
+	"result": 
+	{
+		"@type": 
+		[
+			"ItemList"
+		],
+		"numberOfItems": "18"
+	}
+}
