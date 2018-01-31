@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.spi.JsonException;
 
 /*
  * API calls that modify the data on Eventful (e.g. .../add) do not currently work as they require oAuth.
@@ -63,13 +65,30 @@ public class Main {
     		if(response.get("error").toString().equalsIgnoreCase("1")) {
     			halt("API call not successful!");
     		}
-    		// TODO: response json
+    		// response json
     		res.type("application/json"); 
-    		//System.out.println(response.get("events").get("event").get(0).toString());
     		String result = "{\"@context\": \"http://schema.org/\",\"@type\": \"SearchAction\",\"actionStatus\": \"CompletedActionStatus\",\"result\": {\"@type\": [\"ItemList\"], \"ItemListElement\": [";
     		for(Any event : response.get("events").get("event")) {
-    			System.out.println(event.toString());
-    			result += "{\"id\": \"" + event.get("id").toString() + "\"},";
+    			result += 
+    					"[" + anyToString(event.get("id")) + "," +
+    					anyToString(event.get("url")) + "," +
+    					anyToString(event.get("title")) + "," +
+    					anyToString(event.get("description")) + "," +
+    					anyToString(event.get("start_time")) + "," +
+    					anyToString(event.get("stop_time")) + "," +
+    					anyToString(event.get("venue_id")) + "," +
+    					anyToString(event.get("venue_url")) + "," +
+    					anyToString(event.get("venue_name")) + "," +
+    					anyToString(event.get("venue_address")) + "," +
+    					anyToString(event.get("city_name")) + "," +
+    					anyToString(event.get("region_name")) + "," +
+    					anyToString(event.get("region_abbr")) + "," +
+    					anyToString(event.get("postal_code")) + "," +
+    					anyToString(event.get("country_name")) + "," +
+    					"\"" + event.get("latitude").toFloat() + "\"," +
+    					"\"" + event.get("longitude").toFloat() + "\"," +
+    					anyToString(event.get("geocode_type")) +
+    					"],";
     		}
     		result = result.substring(0, result.length()-1); //remove the last comma
     		return result + "]}}";
@@ -223,5 +242,13 @@ public class Main {
     	});
     	
     	
+    }
+    
+    private static String anyToString(Any any) {
+    	try {	//ignore strings with invalid unicode characters
+    		return JsonStream.serialize(any);
+    	} catch(JsonException e) {
+    		return null;
+    	}
     }
 }
